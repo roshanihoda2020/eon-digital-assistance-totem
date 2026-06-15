@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { EONHeader } from './components/EONHeader'
 import { AvatarSection } from './components/AvatarSection'
 import { ChatArea } from './components/ChatArea'
-import { LuciaControlBar } from './components/LuciaControlBar'
+import { LuxiaControlBar } from './components/LuxiaControlBar'
 import { KioskKeyboard } from './components/KioskKeyboard'
 import { EONFooter } from './components/EONFooter'
 import { ConfirmationOverlay } from './components/ConfirmationOverlay'
@@ -24,7 +24,7 @@ function currentTime() {
 }
 
 function makeWelcome(): Message {
-  return { id: Date.now(), role: 'assistant', text: 'Ciao, sono Lucia. Come posso aiutarti oggi?', time: currentTime() }
+  return { id: Date.now(), role: 'assistant', text: 'Ciao, sono Luxia. Come posso aiutarti oggi?', time: currentTime() }
 }
 
 const RESPONSES = [
@@ -282,7 +282,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* ── Control bar — ALWAYS visible (7 compact buttons) ─────── */}
-      <LuciaControlBar
+      <LuxiaControlBar
         sessionState={sessionState}
         displayMode={displayMode}
         lang={lang}

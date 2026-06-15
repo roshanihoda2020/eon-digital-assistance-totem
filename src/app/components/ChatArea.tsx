@@ -50,7 +50,7 @@ export function ChatArea({ messages, onRipeti }: Props) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 4 }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#EA1D0A' }} />
               <span style={{ fontSize: 14, fontWeight: 600, color: '#EA1D0A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                Lucia
+                Luxia
               </span>
             </div>
           )}
@@ -85,7 +85,7 @@ export function ChatArea({ messages, onRipeti }: Props) {
             {msg.time}
           </span>
 
-          {/* RIPETI — contextual, only after the last Lucia message */}
+          {/* RIPETI — contextual, only after the last Luxia message */}
           {msg.role === 'assistant' && idx === lastAssistantIdx && onRipeti && (
             <button
               onClick={onRipeti}

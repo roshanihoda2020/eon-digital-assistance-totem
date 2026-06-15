@@ -23,7 +23,7 @@ const FOOTER_H   = 192
 const BAR_H_NORM = 76
 const BAR_H_COMP = 72
 
-export function LuciaControlBar({
+export function LuxiaControlBar({
   sessionState, displayMode, lang, keyboardOpen,
   onParla, onScrivi, onInvia, onReset, onTermina, onLangChange, onSetAvatar, onSetChat,
 }: Props) {

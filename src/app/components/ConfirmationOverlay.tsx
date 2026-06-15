@@ -13,7 +13,7 @@ const CONFIG = {
     iconColor: '#404040',
     iconBg: '#F6F6F7',
     title: 'Avviare una nuova conversazione?',
-    description: 'La conversazione attuale verrà eliminata. Lucia inizierà con un nuovo saluto.',
+    description: 'La conversazione attuale verrà eliminata. Luxia inizierà con un nuovo saluto.',
     confirmLabel: 'Sì, ricomincia',
     confirmBg: '#EA1D0A',
   },
