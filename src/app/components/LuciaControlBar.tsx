@@ -1,13 +1,13 @@
 import { Mic, Keyboard, Send, RefreshCw, LogOut, ChevronDown, Check, User, MessageSquare } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useState } from 'react'
-import { SessionState, LangCode, LANGUAGES, DisplayMode } from '../types'
+import { SessionState, LangCode, LANGUAGES, DisplayMode, KEYBOARD_HEIGHT, TEXT_STRIP_HEIGHT } from '../types'
 
 interface Props {
   sessionState: SessionState
   displayMode: DisplayMode
   lang: LangCode
-  showKeyboard: boolean
+  keyboardOpen: boolean
   onParla: () => void
   onScrivi: () => void
   onInvia: () => void
@@ -20,13 +20,11 @@ interface Props {
 
 // Heights for dropdown offset calculation (keep in sync with actual rendered heights)
 const FOOTER_H   = 192
-const BAR_H_NORM = 72   // paddingTop(10) + button(52) + paddingBottom(10)
-const BAR_H_COMP = 60   // paddingTop(8)  + button(44) + paddingBottom(8)
-const STRIP_H    = 72
-const KEYBOARD_H = 520
+const BAR_H_NORM = 76
+const BAR_H_COMP = 72
 
 export function LuciaControlBar({
-  sessionState, displayMode, lang, showKeyboard,
+  sessionState, displayMode, lang, keyboardOpen,
   onParla, onScrivi, onInvia, onReset, onTermina, onLangChange, onSetAvatar, onSetChat,
 }: Props) {
   const [langOpen, setLangOpen] = useState(false)
@@ -35,15 +33,15 @@ export function LuciaControlBar({
   const isProcessing = sessionState === 'processing'
   const currentLang  = LANGUAGES.find(l => l.code === lang) ?? LANGUAGES[0]
   const inAvatarMode = displayMode === 'avatar'
-  const compact      = showKeyboard
+  const compact      = keyboardOpen
 
-  const btnH    = compact ? 44 : 52
-  const iconSz  = compact ? 15 : 16
-  const barPad  = compact ? 8  : 10
+  const btnH    = compact ? 58 : 56
+  const iconSz  = compact ? 14 : 16
+  const barPad  = compact ? 7  : 10
 
   // Position the dropdown so it always floats above all bottom UI
-  const dropBottom = showKeyboard
-    ? FOOTER_H + BAR_H_COMP + STRIP_H + KEYBOARD_H + 8
+  const dropBottom = keyboardOpen
+    ? FOOTER_H + BAR_H_COMP + TEXT_STRIP_HEIGHT + KEYBOARD_HEIGHT + 8
     : FOOTER_H + BAR_H_NORM + 8
 
   return (
@@ -206,11 +204,9 @@ export function LuciaControlBar({
                 style={{ transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}
               />
             </div>
-            {!compact && (
-              <span style={{ fontSize: 10, fontWeight: 500, color: '#999999', lineHeight: 1, marginTop: 1 }}>
-                LINGUA
-              </span>
-            )}
+            <span style={{ fontSize: compact ? 10 : 11, fontWeight: 500, color: '#999999', lineHeight: 1, marginTop: 1 }}>
+              Lingua
+            </span>
           </button>
 
           {/* Dropup — fixed position, always above footer + control bar + optional keyboard */}
@@ -341,24 +337,22 @@ function Btn({ onClick, label, desc, icon, active, activeColor, disabled, danger
         <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.07em', lineHeight: 1 }}>
           {label}
         </span>
-        {!compact && (
-          <span
-            style={{
-              fontSize: 10,
-              fontWeight: 500,
-              color: descClr,
-              lineHeight: 1.1,
-              letterSpacing: '0.01em',
-              maxWidth: '90%',
-              textAlign: 'center',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {desc}
-          </span>
-        )}
+        <span
+          style={{
+            fontSize: compact ? 10 : 11,
+            fontWeight: 500,
+            color: descClr,
+            lineHeight: 1.05,
+            letterSpacing: 0,
+            maxWidth: '92%',
+            textAlign: 'center',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {desc}
+        </span>
       </button>
     </div>
   )

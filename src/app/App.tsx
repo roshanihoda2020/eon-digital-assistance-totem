@@ -10,11 +10,13 @@ import { ConfirmationOverlay } from './components/ConfirmationOverlay'
 import { LuxiaWelcomePanel, LuxiaCompactHeader } from './components/LuxiaWelcomePanel'
 import {
   DisplayMode, SessionState, LangCode, Message,
-  AVATAR_HEIGHT_NORMAL, AVATAR_HEIGHT_COMPRESSED,
+  AVATAR_HEIGHT_NORMAL, AVATAR_HEIGHT_COMPRESSED, KEYBOARD_HEIGHT, TEXT_STRIP_HEIGHT,
 } from './types'
 
 // Inactivity threshold — deactivates mic/speaking without resetting conversation
 const INACTIVITY_MS = 30_000
+const DESIGN_WIDTH = 1080
+const DESIGN_HEIGHT = 1920
 
 function currentTime() {
   const now = new Date()
@@ -39,15 +41,16 @@ export default function App() {
   const [messages,     setMessages]     = useState<Message[]>([makeWelcome()])
   const [inputValue,   setInputValue]   = useState('')
   const [lang,         setLang]         = useState<LangCode>('IT')
-  const [showKeyboard, setShowKeyboard] = useState(false)
+  const [keyboardOpen, setKeyboardOpen] = useState(false)
   const [hasAnswer,    setHasAnswer]    = useState(false)
   const [confirmation, setConfirmation] = useState<'reset' | 'end' | null>(null)
+  const [viewportScale, setViewportScale] = useState(1)
 
   // Hero panel height — drives smooth layout animation
   const hasUserMessage = messages.some(m => m.role === 'user')
 
   const heroHeight = displayMode === 'avatar'
-    ? (showKeyboard ? AVATAR_HEIGHT_COMPRESSED : AVATAR_HEIGHT_NORMAL)
+    ? (keyboardOpen ? AVATAR_HEIGHT_COMPRESSED : AVATAR_HEIGHT_NORMAL)
     : hasUserMessage ? 80 : 280
 
   const heroKey = displayMode === 'avatar' ? 'avatar'
@@ -69,6 +72,24 @@ export default function App() {
     return () => { if (inactivityTimer.current) clearTimeout(inactivityTimer.current) }
   }, [resetInactivity])
 
+  useEffect(() => {
+    const updateScale = () => {
+      const viewport = window.visualViewport
+      const width = viewport?.width ?? window.innerWidth
+      const height = viewport?.height ?? window.innerHeight
+      setViewportScale(Math.min(width / DESIGN_WIDTH, height / DESIGN_HEIGHT, 1))
+    }
+
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    window.visualViewport?.addEventListener('resize', updateScale)
+
+    return () => {
+      window.removeEventListener('resize', updateScale)
+      window.visualViewport?.removeEventListener('resize', updateScale)
+    }
+  }, [])
+
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   const handleParla = useCallback(() => {
@@ -76,21 +97,21 @@ export default function App() {
     if (sessionState === 'listening') {
       setSessionState('waiting')
     } else {
-      setShowKeyboard(false)
+      setKeyboardOpen(false)
       setSessionState('listening')
     }
   }, [sessionState, resetInactivity])
 
   const handleScrivi = useCallback(() => {
     resetInactivity()
-    if (showKeyboard) {
-      setShowKeyboard(false)
+    if (keyboardOpen) {
+      setKeyboardOpen(false)
       setSessionState('waiting')
     } else {
-      setShowKeyboard(true)
+      setKeyboardOpen(true)
       setSessionState('typing')
     }
-  }, [showKeyboard, resetInactivity])
+  }, [keyboardOpen, resetInactivity])
 
   const handleSend = useCallback(() => {
     if (sessionState === 'processing') return
@@ -106,7 +127,7 @@ export default function App() {
       time,
     }])
     setInputValue('')
-    setShowKeyboard(false)
+    setKeyboardOpen(false)
     setSessionState('processing')
 
     setTimeout(() => {
@@ -127,14 +148,14 @@ export default function App() {
   }, [handleSend, resetInactivity])
 
   const closeKeyboard = useCallback(() => {
-    setShowKeyboard(false)
+    setKeyboardOpen(false)
     if (sessionState === 'typing') setSessionState('waiting')
   }, [sessionState])
 
   const executeReset = useCallback(() => {
     setMessages([makeWelcome()])
     setInputValue('')
-    setShowKeyboard(false)
+    setKeyboardOpen(false)
     setSessionState('waiting')
     setHasAnswer(false)
     setConfirmation(null)
@@ -145,7 +166,7 @@ export default function App() {
   const executeEnd = useCallback(() => {
     setMessages([makeWelcome()])
     setInputValue('')
-    setShowKeyboard(false)
+    setKeyboardOpen(false)
     setSessionState('waiting')
     setHasAnswer(false)
     setConfirmation(null)
@@ -156,8 +177,20 @@ export default function App() {
   return (
     <div
       style={{
-        width: 1080,
-        height: 1920,
+        width: '100vw',
+        height: '100dvh',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        background: '#FDF3F2',
+      }}
+    >
+      <div
+        style={{
+        width: DESIGN_WIDTH,
+        height: DESIGN_HEIGHT,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -166,6 +199,8 @@ export default function App() {
         userSelect: 'none',
         WebkitUserSelect: 'none',
         position: 'relative',
+        transform: `scale(${viewportScale})`,
+        transformOrigin: 'center center',
       }}
     >
       {/* ── Header — minimal, no interactive controls ─────────── */}
@@ -190,7 +225,7 @@ export default function App() {
             style={{ position: 'absolute', inset: 0 }}
           >
             {displayMode === 'avatar' ? (
-              <AvatarSection />
+              <AvatarSection keyboardOpen={keyboardOpen} />
             ) : hasUserMessage ? (
               <LuxiaCompactHeader />
             ) : (
@@ -232,11 +267,11 @@ export default function App() {
           Bordeaux bar above keyboard showing what's being typed.
       ─────────────────────────────────────────────────────────── */}
       <AnimatePresence>
-        {showKeyboard && (
+        {keyboardOpen && (
           <motion.div
             key="text-strip"
             initial={{ height: 0 }}
-            animate={{ height: 72 }}
+            animate={{ height: TEXT_STRIP_HEIGHT }}
             exit={{ height: 0 }}
             transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
             style={{ overflow: 'hidden', flexShrink: 0 }}
@@ -251,7 +286,7 @@ export default function App() {
         sessionState={sessionState}
         displayMode={displayMode}
         lang={lang}
-        showKeyboard={showKeyboard}
+        keyboardOpen={keyboardOpen}
         onParla={handleParla}
         onScrivi={handleScrivi}
         onInvia={handleSend}
@@ -264,11 +299,11 @@ export default function App() {
 
       {/* ── Keyboard — slides in below control bar ─────────────── */}
       <AnimatePresence>
-        {showKeyboard && (
+        {keyboardOpen && (
           <motion.div
             key="keyboard"
             initial={{ height: 0 }}
-            animate={{ height: 520 }}
+            animate={{ height: KEYBOARD_HEIGHT }}
             exit={{ height: 0 }}
             transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
             style={{ overflow: 'hidden', flexShrink: 0 }}
@@ -292,6 +327,7 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+      </div>
     </div>
   )
 }
@@ -302,7 +338,7 @@ function TextStrip({ value, onSend }: { value: string; onSend: () => void }) {
   return (
     <div
       style={{
-        height: 72,
+        height: TEXT_STRIP_HEIGHT,
         background: '#B00502',
         display: 'flex',
         alignItems: 'center',

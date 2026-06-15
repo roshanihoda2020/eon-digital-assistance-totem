@@ -1,5 +1,6 @@
 import { X, Delete, ArrowRight, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
+import { KEYBOARD_HEIGHT } from '../types'
 
 interface Props {
   onKeyPress: (key: string) => void
@@ -21,9 +22,9 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
     onKeyPress(shifted ? key.toUpperCase() : key.toLowerCase())
   }
 
-  const KEY_HEIGHT = 80
-  const KEY_RADIUS = 10
-  const KEY_GAP = 8
+  const KEY_HEIGHT = 58
+  const KEY_RADIUS = 9
+  const KEY_GAP = 6
 
   const letterKeyStyle: React.CSSProperties = {
     height: KEY_HEIGHT,
@@ -35,7 +36,7 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
     cursor: 'pointer',
     fontFamily: 'Inter, sans-serif',
     fontWeight: 700,
-    fontSize: 26,
+    fontSize: 22,
     color: '#FFFFFF',
     letterSpacing: '0.02em',
     background: '#EA1D0A',
@@ -48,14 +49,14 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
   const accentKeyStyle: React.CSSProperties = {
     ...letterKeyStyle,
     background: '#1EA2B1',
-    fontSize: 22,
+    fontSize: 20,
   }
 
   const punctKeyStyle: React.CSSProperties = {
     ...letterKeyStyle,
     background: '#E0E0E2',
     color: '#404040',
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: 600,
   }
 
@@ -76,7 +77,7 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
   return (
     <div
       style={{
-        height: 520,
+        height: KEYBOARD_HEIGHT,
         flexShrink: 0,
         background: '#F6F6F7',
         borderTop: '1px solid #E0E0E2',
@@ -84,7 +85,7 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
         flexDirection: 'column',
         justifyContent: 'center',
         gap: KEY_GAP,
-        padding: '16px 28px',
+        padding: '12px 28px',
         fontFamily: 'Inter, sans-serif',
       }}
     >
@@ -94,7 +95,7 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
           <button
             key={k}
             onClick={() => onKeyPress(k)}
-            style={{ ...letterKeyStyle, flex: 1, fontSize: 24 }}
+            style={{ ...letterKeyStyle, flex: 1, fontSize: 21 }}
           >
             {k}
           </button>
@@ -133,10 +134,10 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
         ))}
         <button
           onClick={() => onKeyPress('ENTER')}
-          style={{ ...accentKeyStyle, flex: 1.8, gap: 6 }}
+          style={{ ...accentKeyStyle, flex: 1.8, gap: 5 }}
         >
           <ArrowRight size={24} strokeWidth={2.5} />
-          <span style={{ fontSize: 18, fontWeight: 700 }}>Invia</span>
+          <span style={{ fontSize: 16, fontWeight: 700 }}>Invia</span>
         </button>
       </div>
 
@@ -174,7 +175,7 @@ export function KioskKeyboard({ onKeyPress, onClose }: Props) {
         </button>
         <button
           onClick={() => onKeyPress('SPACE')}
-          style={{ ...accentKeyStyle, flex: 6, fontSize: 18, letterSpacing: '0.15em' }}
+          style={{ ...accentKeyStyle, flex: 5.4, fontSize: 16, letterSpacing: '0.12em' }}
         >
           SPAZIO
         </button>
