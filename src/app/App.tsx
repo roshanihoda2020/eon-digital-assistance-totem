@@ -44,7 +44,6 @@ export default function App() {
   const [keyboardOpen, setKeyboardOpen] = useState(false)
   const [hasAnswer,    setHasAnswer]    = useState(false)
   const [confirmation, setConfirmation] = useState<'reset' | 'end' | null>(null)
-  const [viewportScale, setViewportScale] = useState(1)
 
   // Hero panel height — drives smooth layout animation
   const hasUserMessage = messages.some(m => m.role === 'user')
@@ -71,24 +70,6 @@ export default function App() {
     resetInactivity()
     return () => { if (inactivityTimer.current) clearTimeout(inactivityTimer.current) }
   }, [resetInactivity])
-
-  useEffect(() => {
-    const updateScale = () => {
-      const viewport = window.visualViewport
-      const width = viewport?.width ?? window.innerWidth
-      const height = viewport?.height ?? window.innerHeight
-      setViewportScale(Math.min(width / DESIGN_WIDTH, height / DESIGN_HEIGHT, 1))
-    }
-
-    updateScale()
-    window.addEventListener('resize', updateScale)
-    window.visualViewport?.addEventListener('resize', updateScale)
-
-    return () => {
-      window.removeEventListener('resize', updateScale)
-      window.visualViewport?.removeEventListener('resize', updateScale)
-    }
-  }, [])
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -177,20 +158,20 @@ export default function App() {
   return (
     <div
       style={{
-        width: '100vw',
-        height: '100dvh',
+        width: '100%',
         minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
+        overflowY: 'auto',
+        overflowX: 'hidden',
         background: '#FDF3F2',
       }}
     >
       <div
         style={{
-        width: DESIGN_WIDTH,
-        height: DESIGN_HEIGHT,
+        width: `min(100vw, ${DESIGN_WIDTH}px)`,
+        maxWidth: DESIGN_WIDTH,
+        minHeight: `max(100vh, ${DESIGN_HEIGHT}px)`,
+        height: 'auto',
+        margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -199,8 +180,6 @@ export default function App() {
         userSelect: 'none',
         WebkitUserSelect: 'none',
         position: 'relative',
-        transform: `scale(${viewportScale})`,
-        transformOrigin: 'center center',
       }}
     >
       {/* ── Header — minimal, no interactive controls ─────────── */}
