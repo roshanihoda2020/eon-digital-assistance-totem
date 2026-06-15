@@ -3,7 +3,14 @@ import avatarImg from '../../imports/Avatar.png'
 export function AvatarSection() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', background: '#F6F6F7' }}>
+      <div
+        style={{
+          flex: 1,
+          position: 'relative',
+          overflow: 'hidden',
+          background: '#F6F6F7',
+        }}
+      >
         <img
           src={avatarImg}
           alt="Lucia — assistente digitale E.ON"
@@ -39,16 +46,38 @@ export function AvatarSection() {
               boxShadow: '0 0 0 3px rgba(30,162,177,0.22)',
             }}
           />
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#404040', letterSpacing: '0.03em', fontFamily: 'Inter, sans-serif' }}>
+
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: '#404040',
+              letterSpacing: '0.03em',
+              fontFamily: 'Inter, sans-serif',
+            }}
+          >
             Lucia
           </span>
-          <span style={{ fontSize: 12, color: '#717182', fontFamily: 'Inter, sans-serif' }}>
+
+          <span
+            style={{
+              fontSize: 12,
+              color: '#717182',
+              fontFamily: 'Inter, sans-serif',
+            }}
+          >
             Assistente E.ON
           </span>
         </div>
       </div>
 
-      <div style={{ height: 3, background: '#EA1D0A', flexShrink: 0 }} />
+      <div
+        style={{
+          height: 3,
+          background: '#EA1D0A',
+          flexShrink: 0,
+        }}
+      />
     </div>
   )
 }
