@@ -1,11 +1,19 @@
+# E.ON Digital Assistance Totem
 
-  # E.ON Digital Assistance Totem
+Interactive kiosk prototype for the E.ON Digital Assistance Point.
 
-  This is a code bundle for E.ON Digital Assistance Totem. The original project is available at https://www.figma.com/design/GWj6STIN8R03DVI9GB5HQ9/E.ON-Digital-Assistance-Totem.
+## Overview
 
-  ## Running the code
+This prototype supports customer interaction through avatar, chat, voice input, language selection, and session controls.
 
-  Run `npm i` to install the dependencies.
+## Tech Stack
 
-  Run `npm run dev` to start the development server.
-  
+- React
+- TypeScript
+- Vite
+
+## Run Locally
+
+```bash
+npm install
+npm run dev

@@ -1,12 +1,10 @@
 import avatarImg from '../../imports/Avatar.png'
-import { ImageWithFallback } from './figma/ImageWithFallback'
 
 export function AvatarSection() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* Image fills all available height — parent controls how tall this is */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden', background: '#F6F6F7' }}>
-        <ImageWithFallback
+        <img
           src={avatarImg}
           alt="Lucia — assistente digitale E.ON"
           style={{
@@ -18,7 +16,6 @@ export function AvatarSection() {
           }}
         />
 
-        {/* Online badge */}
         <div
           style={{
             position: 'absolute',
@@ -33,7 +30,15 @@ export function AvatarSection() {
             backdropFilter: 'blur(6px)',
           }}
         >
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1EA2B1', boxShadow: '0 0 0 3px rgba(30,162,177,0.22)' }} />
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              background: '#1EA2B1',
+              boxShadow: '0 0 0 3px rgba(30,162,177,0.22)',
+            }}
+          />
           <span style={{ fontSize: 14, fontWeight: 600, color: '#404040', letterSpacing: '0.03em', fontFamily: 'Inter, sans-serif' }}>
             Lucia
           </span>
@@ -43,7 +48,6 @@ export function AvatarSection() {
         </div>
       </div>
 
-      {/* Clean separator */}
       <div style={{ height: 3, background: '#EA1D0A', flexShrink: 0 }} />
     </div>
   )
