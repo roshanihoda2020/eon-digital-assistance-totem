@@ -159,9 +159,8 @@ export default function App() {
     <div
       style={{
         width: '100%',
-        minHeight: '100vh',
-        overflowY: 'auto',
-        overflowX: 'hidden',
+        height: '100dvh',
+        overflow: 'hidden',
         background: '#FDF3F2',
       }}
     >
@@ -169,8 +168,8 @@ export default function App() {
         style={{
         width: `min(100vw, ${DESIGN_WIDTH}px)`,
         maxWidth: DESIGN_WIDTH,
-        minHeight: `max(100vh, ${DESIGN_HEIGHT}px)`,
-        height: 'auto',
+        height: `min(100dvh, ${DESIGN_HEIGHT}px)`,
+        maxHeight: DESIGN_HEIGHT,
         margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',

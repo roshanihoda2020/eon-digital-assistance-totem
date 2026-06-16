@@ -26,6 +26,7 @@ export function ChatArea({ messages, onRipeti }: Props) {
     <div
       style={{
         flex: 1,
+        minHeight: 0,
         overflowY: 'auto',
         overflowX: 'hidden',
         padding: '28px 48px',

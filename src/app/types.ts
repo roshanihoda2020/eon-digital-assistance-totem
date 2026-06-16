@@ -1,8 +1,8 @@
 export type DisplayMode = 'avatar' | 'fullchat'
 
 // Avatar heights: normal vs compressed (keyboard open in avatar mode)
-export const AVATAR_HEIGHT_NORMAL = 560
-export const AVATAR_HEIGHT_COMPRESSED = 360
+export const AVATAR_HEIGHT_NORMAL = 480
+export const AVATAR_HEIGHT_COMPRESSED = 300
 
 export const TEXT_STRIP_HEIGHT = 64
 export const KEYBOARD_HEIGHT = 400
