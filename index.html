@@ -8,7 +8,19 @@
       <title>E.ON Digital Assistance Totem</title>
       <meta name="description" content="This interactive kiosk interface provides E.ON customers with a user-friendly digital assistant for accessing energy services and support through chat or voice." />
       <meta name="robots" content="noindex, nofollow" />
-      <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
+      <style>
+        html, body, #root {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          overflow: hidden;
+        }
+
+        body {
+          position: fixed;
+          inset: 0;
+        }
+      </style>
       
     </head>
 

@@ -1,7 +1,6 @@
 import { Mic, Keyboard, Send, RefreshCw, LogOut, ChevronDown, Check, User, MessageSquare, Globe2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useLayoutEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import { useState } from 'react'
 import { SessionState, LangCode, LANGUAGES, DisplayMode } from '../types'
 
 interface Props {
@@ -27,7 +26,6 @@ export function LuxiaControlBar({
   onParla, onScrivi, onInvia, onReset, onTermina, onLangChange, onSetAvatar, onSetChat,
 }: Props) {
   const [langOpen, setLangOpen] = useState(false)
-  const langAnchorRef = useRef<HTMLDivElement>(null)
   const isListening = sessionState === 'listening'
   const isTyping = sessionState === 'typing'
   const isProcessing = sessionState === 'processing'
@@ -168,7 +166,7 @@ export function LuxiaControlBar({
                 />
               </div>
 
-              <div ref={langAnchorRef} style={{ position: 'relative' }}>
+              <div style={{ position: 'relative' }}>
                 <IconBtn
                   onClick={() => setLangOpen(o => !o)}
                   ariaLabel="Lingua"
@@ -314,7 +312,7 @@ export function LuxiaControlBar({
             />
           </ActionGroup>
 
-          <div ref={langAnchorRef} style={{ width: '100%', position: 'relative', display: 'flex', alignItems: 'flex-end' }}>
+          <div style={{ width: '100%', position: 'relative', display: 'flex', alignItems: 'flex-end' }}>
             <button
               onClick={() => setLangOpen(o => !o)}
               aria-label="Lingua"
@@ -357,7 +355,8 @@ export function LuxiaControlBar({
 
       <LanguageMenu
         open={langOpen}
-        anchorRef={langAnchorRef}
+        collapsed={collapsed}
+        railWidth={railWidth}
         lang={lang}
         onSelect={(nextLang) => { onLangChange(nextLang); setLangOpen(false) }}
       />
@@ -367,52 +366,41 @@ export function LuxiaControlBar({
 
 function LanguageMenu({
   open,
-  anchorRef,
+  collapsed,
+  railWidth,
   lang,
   onSelect,
 }: {
   open: boolean
-  anchorRef: React.RefObject<HTMLDivElement>
+  collapsed: boolean
+  railWidth: number
   lang: LangCode
   onSelect: (lang: LangCode) => void
 }) {
-  const [position, setPosition] = useState({ right: 24, bottom: 24 })
+  const menuRight = collapsed ? 56 : railWidth + 26
 
-  useLayoutEffect(() => {
-    if (!open || !anchorRef.current) return
-    const rect = anchorRef.current.getBoundingClientRect()
-    const menuWidth = 210
-    const right = Math.max(16, window.innerWidth - rect.right)
-    const leftOverflow = rect.right - menuWidth < 16
-    setPosition({
-      right: leftOverflow ? Math.max(16, window.innerWidth - menuWidth - 16) : right,
-      bottom: Math.max(16, window.innerHeight - rect.top + 10),
-    })
-  }, [open, anchorRef])
-
-  if (typeof document === 'undefined') return null
-
-  return createPortal(
+  return (
     <AnimatePresence>
       {open && (
         <motion.div
-          key="lang-drop-portal"
+          key="lang-drop"
           initial={{ opacity: 0, y: 8, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 8, scale: 0.96 }}
           transition={{ duration: 0.15 }}
           style={{
-            position: 'fixed',
-            bottom: position.bottom,
-            right: position.right,
+            position: 'absolute',
+            right: menuRight,
+            bottom: 12,
             minWidth: 210,
             background: '#FFFFFF',
             border: '1px solid rgba(234,29,10,0.10)',
             borderRadius: 14,
             overflow: 'hidden',
             boxShadow: '0 -4px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.04)',
-            zIndex: 2000,
+            zIndex: 1000,
             fontFamily: 'Inter, sans-serif',
+            pointerEvents: 'auto',
           }}
         >
           {LANGUAGES.map(l => (
@@ -448,8 +436,7 @@ function LanguageMenu({
           ))}
         </motion.div>
       )}
-    </AnimatePresence>,
-    document.body,
+    </AnimatePresence>
   )
 }
 

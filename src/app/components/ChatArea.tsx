@@ -10,10 +10,12 @@ interface Props {
 }
 
 export function ChatArea({ messages, onRipeti }: Props) {
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const chatRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const chat = chatRef.current
+    if (!chat) return
+    chat.scrollTop = chat.scrollHeight
   }, [messages])
 
   // Index of the last assistant message — RIPETI chip shows only there
@@ -24,6 +26,7 @@ export function ChatArea({ messages, onRipeti }: Props) {
 
   return (
     <div
+      ref={chatRef}
       style={{
         flex: 1,
         minHeight: 0,
@@ -140,8 +143,6 @@ export function ChatArea({ messages, onRipeti }: Props) {
           )}
         </div>
       ))}
-
-      <div ref={bottomRef} />
     </div>
   )
 }

@@ -36,6 +36,9 @@ const RESPONSES = [
 ]
 
 export default function App() {
+  const debugPreview = typeof window !== 'undefined'
+    && new URLSearchParams(window.location.search).get('debugPreview') === 'true'
+  const [previewScale, setPreviewScale] = useState(1)
   const [displayMode,  setDisplayMode]  = useState<DisplayMode>('avatar')
   const [sessionState, setSessionState] = useState<SessionState>('waiting')
   const [messages,     setMessages]     = useState<Message[]>([makeWelcome()])
@@ -68,6 +71,57 @@ export default function App() {
     resetInactivity()
     return () => { if (inactivityTimer.current) clearTimeout(inactivityTimer.current) }
   }, [resetInactivity])
+
+  useEffect(() => {
+    const updatePreviewScale = () => {
+      if (debugPreview) {
+        setPreviewScale(1)
+        return
+      }
+
+      const nextScale = Math.min(
+        window.innerWidth / DESIGN_WIDTH,
+        window.innerHeight / DESIGN_HEIGHT,
+        1,
+      )
+      setPreviewScale(nextScale)
+    }
+
+    updatePreviewScale()
+    window.addEventListener('resize', updatePreviewScale)
+    return () => window.removeEventListener('resize', updatePreviewScale)
+  }, [debugPreview])
+
+  useEffect(() => {
+    const root = document.getElementById('root')
+    const html = document.documentElement
+    const body = document.body
+
+    if (debugPreview) {
+      html.style.height = 'auto'
+      html.style.overflow = 'auto'
+      body.style.height = 'auto'
+      body.style.overflow = 'auto'
+      body.style.position = 'static'
+      body.style.inset = 'auto'
+      if (root) {
+        root.style.height = 'auto'
+        root.style.overflow = 'visible'
+      }
+      return
+    }
+
+    html.style.height = '100%'
+    html.style.overflow = 'hidden'
+    body.style.height = '100%'
+    body.style.overflow = 'hidden'
+    body.style.position = 'fixed'
+    body.style.inset = '0'
+    if (root) {
+      root.style.height = '100%'
+      root.style.overflow = 'hidden'
+    }
+  }, [debugPreview])
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -156,22 +210,36 @@ export default function App() {
     resetInactivity()
   }, [resetInactivity])
 
+  const activeScale = debugPreview ? 1 : previewScale
+
   return (
     <div
       style={{
-        width: '100%',
-        height: '100dvh',
-        overflow: 'hidden',
-        background: '#FDF3F2',
+        width: debugPreview ? DESIGN_WIDTH + 64 : '100vw',
+        minWidth: debugPreview ? DESIGN_WIDTH + 64 : undefined,
+        minHeight: debugPreview ? DESIGN_HEIGHT + 64 : undefined,
+        height: debugPreview ? 'auto' : '100dvh',
+        overflow: debugPreview ? 'visible' : 'hidden',
+        background: '#181818',
+        display: 'flex',
+        alignItems: debugPreview ? 'flex-start' : 'center',
+        justifyContent: debugPreview ? 'flex-start' : 'center',
+        padding: debugPreview ? 32 : 0,
+        boxSizing: 'border-box',
       }}
     >
       <div
         style={{
-        width: `min(100vw, ${DESIGN_WIDTH}px)`,
-        maxWidth: DESIGN_WIDTH,
-        height: `min(100dvh, ${DESIGN_HEIGHT}px)`,
-        maxHeight: DESIGN_HEIGHT,
-        margin: '0 auto',
+        width: DESIGN_WIDTH * activeScale,
+        height: DESIGN_HEIGHT * activeScale,
+        position: 'relative',
+        flexShrink: 0,
+      }}
+    >
+      <div
+        style={{
+        width: DESIGN_WIDTH,
+        height: DESIGN_HEIGHT,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -180,6 +248,10 @@ export default function App() {
         userSelect: 'none',
         WebkitUserSelect: 'none',
         position: 'relative',
+        flexShrink: 0,
+        transform: debugPreview ? 'none' : `scale(${activeScale})`,
+        transformOrigin: 'top left',
+        boxShadow: !debugPreview && activeScale < 1 ? '0 24px 80px rgba(0,0,0,0.35)' : 'none',
       }}
     >
       {/* ── Header — minimal, no interactive controls ─────────── */}
@@ -307,6 +379,7 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+      </div>
       </div>
     </div>
   )
