@@ -86,6 +86,32 @@ export function ChatArea({ messages, onRipeti }: Props) {
             {msg.time}
           </span>
 
+          {msg.role === 'user' && msg.source === 'voice' && (
+            <button
+              aria-label="Riascolta messaggio vocale"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                marginRight: 4,
+                marginTop: 2,
+                padding: '6px 12px 6px 10px',
+                borderRadius: 16,
+                border: '1.5px solid rgba(234,29,10,0.24)',
+                background: 'rgba(234,29,10,0.06)',
+                cursor: 'pointer',
+                color: '#EA1D0A',
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: '0.02em',
+                fontFamily: 'Inter, sans-serif',
+              }}
+            >
+              <Volume2 size={14} strokeWidth={2} />
+              Riascolta
+            </button>
+          )}
+
           {/* RIPETI — contextual, only after the last Luxia message */}
           {msg.role === 'assistant' && idx === lastAssistantIdx && onRipeti && (
             <button

@@ -13,83 +13,97 @@ export function LuxiaWelcomePanel() {
         overflow: 'hidden',
       }}
     >
-      {/* E.ON red accent line */}
       <div
         style={{
-          width: 4,
-          height: 160,
-          background: '#EA1D0A',
-          borderRadius: 2,
-          flexShrink: 0,
-          alignSelf: 'center',
-        }}
-      />
-
-      {/* Text content */}
-      <div
-        style={{
-          marginLeft: 36,
+          width: '100%',
+          minHeight: 188,
           display: 'flex',
-          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '28px 34px',
+          background: '#FFF7F6',
+          border: '1.5px solid rgba(240,85,72,0.16)',
+          borderRadius: 16,
+          boxShadow: '0 10px 30px rgba(95,31,25,0.07)',
         }}
       >
-        <span
+        {/* E.ON red accent line */}
+        <div
           style={{
-            fontSize: 52,
-            fontWeight: 700,
-            color: '#1A1A1A',
-            lineHeight: 1.06,
-            letterSpacing: '-0.02em',
-            fontFamily: 'Inter, sans-serif',
-            display: 'block',
-            marginBottom: 10,
+            width: 4,
+            height: 160,
+            background: '#EA1D0A',
+            borderRadius: 2,
+            flexShrink: 0,
+            alignSelf: 'center',
           }}
-        >
-          Ciao, sono Luxia
-        </span>
+        />
 
-        <span
+        {/* Text content */}
+        <div
           style={{
-            fontSize: 20,
-            fontWeight: 500,
-            color: '#EA1D0A',
-            lineHeight: 1.3,
-            fontFamily: 'Inter, sans-serif',
-            display: 'block',
-            marginBottom: 14,
-            letterSpacing: '0.01em',
+            marginLeft: 36,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
-          L'assistente digitale E.ON
-        </span>
+          <span
+            style={{
+              fontSize: 52,
+              fontWeight: 700,
+              color: '#1A1A1A',
+              lineHeight: 1.06,
+              letterSpacing: '-0.02em',
+              fontFamily: 'Inter, sans-serif',
+              display: 'block',
+              marginBottom: 10,
+            }}
+          >
+            Ciao, sono Luxia
+          </span>
 
-        <span
-          style={{
-            fontSize: 16,
-            fontWeight: 400,
-            color: '#666666',
-            lineHeight: 1.4,
-            fontFamily: 'Inter, sans-serif',
-            display: 'block',
-            marginBottom: 18,
-            maxWidth: 600,
-          }}
-        >
-          Ti aiuto con informazioni, servizi e supporto clienti.
-        </span>
+          <span
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: '#EA1D0A',
+              lineHeight: 1.3,
+              fontFamily: 'Inter, sans-serif',
+              display: 'block',
+              marginBottom: 14,
+              letterSpacing: '0.01em',
+            }}
+          >
+            L'assistente digitale E.ON
+          </span>
 
-        <span
-          style={{
-            fontSize: 19,
-            fontWeight: 600,
-            color: '#1A1A1A',
-            lineHeight: 1.3,
-            fontFamily: 'Inter, sans-serif',
-            display: 'block',
-          }}
-        >
-          Come posso aiutarti oggi?
-        </span>
+          <span
+            style={{
+              fontSize: 16,
+              fontWeight: 400,
+              color: '#666666',
+              lineHeight: 1.4,
+              fontFamily: 'Inter, sans-serif',
+              display: 'block',
+              marginBottom: 18,
+              maxWidth: 600,
+            }}
+          >
+            Ti aiuto con informazioni, servizi e supporto clienti.
+          </span>
+
+          <span
+            style={{
+              fontSize: 19,
+              fontWeight: 600,
+              color: '#1A1A1A',
+              lineHeight: 1.3,
+              fontFamily: 'Inter, sans-serif',
+              display: 'block',
+            }}
+          >
+            Come posso aiutarti oggi?
+          </span>
+        </div>
       </div>
     </div>
   )

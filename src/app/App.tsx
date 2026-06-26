@@ -7,7 +7,7 @@ import { LuxiaControlBar } from './components/LuxiaControlBar'
 import { KioskKeyboard } from './components/KioskKeyboard'
 import { EONFooter } from './components/EONFooter'
 import { ConfirmationOverlay } from './components/ConfirmationOverlay'
-import { LuxiaWelcomePanel, LuxiaCompactHeader } from './components/LuxiaWelcomePanel'
+import { LuxiaWelcomePanel } from './components/LuxiaWelcomePanel'
 import {
   DisplayMode, SessionState, LangCode, Message,
   AVATAR_HEIGHT_NORMAL, AVATAR_HEIGHT_COMPRESSED, KEYBOARD_HEIGHT, TEXT_STRIP_HEIGHT,
@@ -44,16 +44,14 @@ export default function App() {
   const [keyboardOpen, setKeyboardOpen] = useState(false)
   const [hasAnswer,    setHasAnswer]    = useState(false)
   const [confirmation, setConfirmation] = useState<'reset' | 'end' | null>(null)
+  const [railCollapsed, setRailCollapsed] = useState(false)
 
   // Hero panel height — drives smooth layout animation
-  const hasUserMessage = messages.some(m => m.role === 'user')
-
   const heroHeight = displayMode === 'avatar'
     ? (keyboardOpen ? AVATAR_HEIGHT_COMPRESSED : AVATAR_HEIGHT_NORMAL)
-    : hasUserMessage ? 80 : 280
+    : 280
 
   const heroKey = displayMode === 'avatar' ? 'avatar'
-    : hasUserMessage ? 'compact'
     : 'welcome'
 
   // ── 30-second inactivity: deactivates mic/speaking, keeps conversation ──
@@ -101,11 +99,14 @@ export default function App() {
     resetInactivity()
 
     const time = currentTime()
+    const isVoiceMessage = sessionState === 'listening'
+    const messageText = text || 'Vorrei sapere il codice cliente'
     setMessages(prev => [...prev, {
       id: Date.now(),
       role: 'user',
-      text: text || '🎤 Messaggio vocale',
+      text: messageText,
       time,
+      source: isVoiceMessage ? 'voice' : 'text',
     }])
     setInputValue('')
     setKeyboardOpen(false)
@@ -204,8 +205,6 @@ export default function App() {
           >
             {displayMode === 'avatar' ? (
               <AvatarSection keyboardOpen={keyboardOpen} />
-            ) : hasUserMessage ? (
-              <LuxiaCompactHeader />
             ) : (
               <LuxiaWelcomePanel />
             )}
@@ -214,31 +213,50 @@ export default function App() {
       </motion.div>
 
       {/* ── Conversation — always expands to fill remaining space ─ */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
-        <ChatArea
-          messages={messages}
-          onRipeti={hasAnswer ? () => {
-            setSessionState('speaking')
-            resetInactivity()
-            setTimeout(() => { setSessionState('waiting'); resetInactivity() }, 2000)
-          } : undefined}
-        />
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0, position: 'relative' }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <ChatArea
+            messages={messages}
+            onRipeti={hasAnswer ? () => {
+              setSessionState('speaking')
+              resetInactivity()
+              setTimeout(() => { setSessionState('waiting'); resetInactivity() }, 2000)
+            } : undefined}
+          />
 
-        {/* Typing indicator */}
-        <AnimatePresence>
-          {sessionState === 'processing' && (
-            <motion.div
-              key="typing"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              style={{ paddingLeft: 48, paddingBottom: 12, flexShrink: 0 }}
-            >
-              <TypingIndicator />
-            </motion.div>
-          )}
-        </AnimatePresence>
+          {/* Typing indicator */}
+          <AnimatePresence>
+            {sessionState === 'processing' && (
+              <motion.div
+                key="typing"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                style={{ paddingLeft: 48, paddingBottom: 12, flexShrink: 0 }}
+              >
+                <TypingIndicator />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <LuxiaControlBar
+          sessionState={sessionState}
+          displayMode={displayMode}
+          lang={lang}
+          keyboardOpen={keyboardOpen}
+          collapsed={railCollapsed}
+          onCollapsedChange={setRailCollapsed}
+          onParla={handleParla}
+          onScrivi={handleScrivi}
+          onInvia={handleSend}
+          onReset={() => setConfirmation('reset')}
+          onTermina={() => setConfirmation('end')}
+          onLangChange={setLang}
+          onSetAvatar={() => setDisplayMode('avatar')}
+          onSetChat={() => setDisplayMode('fullchat')}
+        />
       </div>
 
       {/* ── Text display strip — shows while keyboard is open ─────
@@ -259,23 +277,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* ── Control bar — ALWAYS visible (7 compact buttons) ─────── */}
-      <LuxiaControlBar
-        sessionState={sessionState}
-        displayMode={displayMode}
-        lang={lang}
-        keyboardOpen={keyboardOpen}
-        onParla={handleParla}
-        onScrivi={handleScrivi}
-        onInvia={handleSend}
-        onReset={() => setConfirmation('reset')}
-        onTermina={() => setConfirmation('end')}
-        onLangChange={setLang}
-        onSetAvatar={() => setDisplayMode('avatar')}
-        onSetChat={() => setDisplayMode('fullchat')}
-      />
-
-      {/* ── Keyboard — slides in below control bar ─────────────── */}
+      {/* ── Keyboard — slides in below the input strip ─────────── */}
       <AnimatePresence>
         {keyboardOpen && (
           <motion.div

@@ -16,6 +16,7 @@ export type Message = {
   role: 'assistant' | 'user'
   text: string
   time: string
+  source?: 'text' | 'voice'
 }
 
 export const LANGUAGES: { code: LangCode; flag: string; label: string }[] = [
