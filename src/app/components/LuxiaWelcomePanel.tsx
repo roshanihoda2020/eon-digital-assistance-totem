@@ -7,8 +7,8 @@ export function LuxiaWelcomePanel() {
         height: '100%',
         display: 'flex',
         alignItems: 'center',
-        paddingInline: 56,
-        paddingBlock: 32,
+        paddingInline: 44,
+        paddingBlock: 24,
         background: '#FDF3F2',
         overflow: 'hidden',
       }}
@@ -16,14 +16,17 @@ export function LuxiaWelcomePanel() {
       <div
         style={{
           width: '100%',
-          minHeight: 188,
+          maxWidth: 720,
+          minHeight: 180,
           display: 'flex',
           alignItems: 'center',
-          padding: '28px 34px',
+          padding: '22px 28px',
           background: '#FFF7F6',
           border: '1.5px solid rgba(240,85,72,0.16)',
           borderRadius: 16,
           boxShadow: '0 10px 30px rgba(95,31,25,0.07)',
+          marginLeft: 0,
+          marginRight: 'auto',
         }}
       >
         {/* E.ON red accent line */}
