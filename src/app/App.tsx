@@ -39,13 +39,13 @@ export default function App() {
   const debugPreview = typeof window !== 'undefined'
     && new URLSearchParams(window.location.search).get('debugPreview') === 'true'
   const [previewScale, setPreviewScale] = useState(1)
-  const [displayMode,  setDisplayMode]  = useState<DisplayMode>('avatar')
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('avatar')
   const [sessionState, setSessionState] = useState<SessionState>('waiting')
-  const [messages,     setMessages]     = useState<Message[]>([makeWelcome()])
-  const [inputValue,   setInputValue]   = useState('')
-  const [lang,         setLang]         = useState<LangCode>('IT')
+  const [messages, setMessages] = useState<Message[]>([makeWelcome()])
+  const [inputValue, setInputValue] = useState('')
+  const [lang, setLang] = useState<LangCode>('IT')
   const [keyboardOpen, setKeyboardOpen] = useState(false)
-  const [hasAnswer,    setHasAnswer]    = useState(false)
+  const [hasAnswer, setHasAnswer] = useState(false)
   const [confirmation, setConfirmation] = useState<'reset' | 'end' | null>(null)
   const [railCollapsed, setRailCollapsed] = useState(false)
 
@@ -125,27 +125,6 @@ export default function App() {
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
-  const handleParla = useCallback(() => {
-    resetInactivity()
-    if (sessionState === 'listening') {
-      setSessionState('waiting')
-    } else {
-      setKeyboardOpen(false)
-      setSessionState('listening')
-    }
-  }, [sessionState, resetInactivity])
-
-  const handleScrivi = useCallback(() => {
-    resetInactivity()
-    if (keyboardOpen) {
-      setKeyboardOpen(false)
-      setSessionState('waiting')
-    } else {
-      setKeyboardOpen(true)
-      setSessionState('typing')
-    }
-  }, [keyboardOpen, resetInactivity])
-
   const handleSend = useCallback(() => {
     if (sessionState === 'processing') return
     const text = inputValue.trim()
@@ -174,6 +153,27 @@ export default function App() {
       setTimeout(() => { setSessionState('waiting'); resetInactivity() }, 2000)
     }, 1500)
   }, [inputValue, sessionState, resetInactivity])
+
+  const handleParla = useCallback(() => {
+    resetInactivity()
+    if (sessionState === 'listening') {
+      handleSend()
+    } else {
+      setKeyboardOpen(false)
+      setSessionState('listening')
+    }
+  }, [handleSend, sessionState, resetInactivity])
+
+  const handleScrivi = useCallback(() => {
+    resetInactivity()
+    if (keyboardOpen) {
+      setKeyboardOpen(false)
+      setSessionState('waiting')
+    } else {
+      setKeyboardOpen(true)
+      setSessionState('typing')
+    }
+  }, [keyboardOpen, resetInactivity])
 
   const handleKeyPress = useCallback((key: string) => {
     resetInactivity()
@@ -230,156 +230,156 @@ export default function App() {
     >
       <div
         style={{
-        width: DESIGN_WIDTH * activeScale,
-        height: DESIGN_HEIGHT * activeScale,
-        position: 'relative',
-        flexShrink: 0,
-      }}
-    >
-      <div
-        style={{
-        width: DESIGN_WIDTH,
-        height: DESIGN_HEIGHT,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        background: '#FDF3F2',
-        fontFamily: 'Inter, sans-serif',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        position: 'relative',
-        flexShrink: 0,
-        transform: debugPreview ? 'none' : `scale(${activeScale})`,
-        transformOrigin: 'top left',
-        boxShadow: !debugPreview && activeScale < 1 ? '0 24px 80px rgba(0,0,0,0.35)' : 'none',
-      }}
-    >
-      {/* ── Header — minimal, no interactive controls ─────────── */}
-      <EONHeader
-        displayMode={displayMode}
-        onToggleMode={() => setDisplayMode(m => m === 'avatar' ? 'fullchat' : 'avatar')}
-      />
-
-      {/* ── Hero panel — single container, crossfades content on state change ─ */}
-      <motion.div
-        animate={{ height: heroHeight }}
-        transition={{ duration: 0.30, ease: [0.4, 0, 0.2, 1] }}
-        style={{ position: 'relative', flexShrink: 0, overflow: 'hidden' }}
+          width: DESIGN_WIDTH * activeScale,
+          height: DESIGN_HEIGHT * activeScale,
+          position: 'relative',
+          flexShrink: 0,
+        }}
       >
-        <AnimatePresence mode="sync">
-          <motion.div
-            key={heroKey}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            style={{ position: 'absolute', inset: 0 }}
-          >
-            {displayMode === 'avatar' ? (
-              <AvatarSection keyboardOpen={keyboardOpen} />
-            ) : (
-              <LuxiaWelcomePanel />
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-
-      {/* ── Conversation — always expands to fill remaining space ─ */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0, position: 'relative' }}>
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <ChatArea
-            messages={messages}
-            onRipeti={hasAnswer ? () => {
-              setSessionState('speaking')
-              resetInactivity()
-              setTimeout(() => { setSessionState('waiting'); resetInactivity() }, 2000)
-            } : undefined}
+        <div
+          style={{
+            width: DESIGN_WIDTH,
+            height: DESIGN_HEIGHT,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            background: '#FDF3F2',
+            fontFamily: 'Inter, sans-serif',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            position: 'relative',
+            flexShrink: 0,
+            transform: debugPreview ? 'none' : `scale(${activeScale})`,
+            transformOrigin: 'top left',
+            boxShadow: !debugPreview && activeScale < 1 ? '0 24px 80px rgba(0,0,0,0.35)' : 'none',
+          }}
+        >
+          {/* ── Header — minimal, no interactive controls ─────────── */}
+          <EONHeader
+            displayMode={displayMode}
+            onToggleMode={() => setDisplayMode(m => m === 'avatar' ? 'fullchat' : 'avatar')}
           />
 
-          {/* Typing indicator */}
-          <AnimatePresence>
-            {sessionState === 'processing' && (
+          {/* ── Hero panel — single container, crossfades content on state change ─ */}
+          <motion.div
+            animate={{ height: heroHeight }}
+            transition={{ duration: 0.30, ease: [0.4, 0, 0.2, 1] }}
+            style={{ position: 'relative', flexShrink: 0, overflow: 'hidden' }}
+          >
+            <AnimatePresence mode="sync">
               <motion.div
-                key="typing"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={heroKey}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                style={{ paddingLeft: 48, paddingBottom: 12, flexShrink: 0 }}
+                transition={{ duration: 0.25 }}
+                style={{ position: 'absolute', inset: 0 }}
               >
-                <TypingIndicator />
+                {displayMode === 'avatar' ? (
+                  <AvatarSection keyboardOpen={keyboardOpen} />
+                ) : (
+                  <LuxiaWelcomePanel />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+
+          {/* ── Conversation — always expands to fill remaining space ─ */}
+          <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0, position: 'relative' }}>
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              <ChatArea
+                messages={messages}
+                onRipeti={hasAnswer ? () => {
+                  setSessionState('speaking')
+                  resetInactivity()
+                  setTimeout(() => { setSessionState('waiting'); resetInactivity() }, 2000)
+                } : undefined}
+              />
+
+              {/* Typing indicator */}
+              <AnimatePresence>
+                {sessionState === 'processing' && (
+                  <motion.div
+                    key="typing"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ paddingLeft: 48, paddingBottom: 12, flexShrink: 0 }}
+                  >
+                    <TypingIndicator />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <LuxiaControlBar
+              sessionState={sessionState}
+              displayMode={displayMode}
+              lang={lang}
+              keyboardOpen={keyboardOpen}
+              collapsed={railCollapsed}
+              onCollapsedChange={setRailCollapsed}
+              onParla={handleParla}
+              onScrivi={handleScrivi}
+              onInvia={handleSend}
+              onReset={() => setConfirmation('reset')}
+              onTermina={() => setConfirmation('end')}
+              onLangChange={setLang}
+              onSetAvatar={() => setDisplayMode('avatar')}
+              onSetChat={() => setDisplayMode('fullchat')}
+            />
+          </div>
+
+          {/* ── Text display strip — shows while keyboard is open ─────
+          Bordeaux bar above keyboard showing what's being typed.
+      ─────────────────────────────────────────────────────────── */}
+          <AnimatePresence>
+            {keyboardOpen && (
+              <motion.div
+                key="text-strip"
+                initial={{ height: 0 }}
+                animate={{ height: TEXT_STRIP_HEIGHT }}
+                exit={{ height: 0 }}
+                transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                style={{ overflow: 'hidden', flexShrink: 0 }}
+              >
+                <TextStrip value={inputValue} onSend={handleSend} />
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* ── Keyboard — slides in below the input strip ─────────── */}
+          <AnimatePresence>
+            {keyboardOpen && (
+              <motion.div
+                key="keyboard"
+                initial={{ height: 0 }}
+                animate={{ height: KEYBOARD_HEIGHT }}
+                exit={{ height: 0 }}
+                transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
+                style={{ overflow: 'hidden', flexShrink: 0 }}
+              >
+                <KioskKeyboard onKeyPress={handleKeyPress} onClose={closeKeyboard} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ── Footer ─────────────────────────────────────────────── */}
+          <EONFooter />
+
+          {/* ── Confirmation overlays ───────────────────────────────── */}
+          <AnimatePresence>
+            {confirmation && (
+              <ConfirmationOverlay
+                key={confirmation}
+                type={confirmation}
+                onConfirm={confirmation === 'reset' ? executeReset : executeEnd}
+                onCancel={() => setConfirmation(null)}
+              />
+            )}
+          </AnimatePresence>
         </div>
-
-        <LuxiaControlBar
-          sessionState={sessionState}
-          displayMode={displayMode}
-          lang={lang}
-          keyboardOpen={keyboardOpen}
-          collapsed={railCollapsed}
-          onCollapsedChange={setRailCollapsed}
-          onParla={handleParla}
-          onScrivi={handleScrivi}
-          onInvia={handleSend}
-          onReset={() => setConfirmation('reset')}
-          onTermina={() => setConfirmation('end')}
-          onLangChange={setLang}
-          onSetAvatar={() => setDisplayMode('avatar')}
-          onSetChat={() => setDisplayMode('fullchat')}
-        />
-      </div>
-
-      {/* ── Text display strip — shows while keyboard is open ─────
-          Bordeaux bar above keyboard showing what's being typed.
-      ─────────────────────────────────────────────────────────── */}
-      <AnimatePresence>
-        {keyboardOpen && (
-          <motion.div
-            key="text-strip"
-            initial={{ height: 0 }}
-            animate={{ height: TEXT_STRIP_HEIGHT }}
-            exit={{ height: 0 }}
-            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-            style={{ overflow: 'hidden', flexShrink: 0 }}
-          >
-            <TextStrip value={inputValue} onSend={handleSend} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Keyboard — slides in below the input strip ─────────── */}
-      <AnimatePresence>
-        {keyboardOpen && (
-          <motion.div
-            key="keyboard"
-            initial={{ height: 0 }}
-            animate={{ height: KEYBOARD_HEIGHT }}
-            exit={{ height: 0 }}
-            transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
-            style={{ overflow: 'hidden', flexShrink: 0 }}
-          >
-            <KioskKeyboard onKeyPress={handleKeyPress} onClose={closeKeyboard} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Footer ─────────────────────────────────────────────── */}
-      <EONFooter />
-
-      {/* ── Confirmation overlays ───────────────────────────────── */}
-      <AnimatePresence>
-        {confirmation && (
-          <ConfirmationOverlay
-            key={confirmation}
-            type={confirmation}
-            onConfirm={confirmation === 'reset' ? executeReset : executeEnd}
-            onCancel={() => setConfirmation(null)}
-          />
-        )}
-      </AnimatePresence>
-      </div>
       </div>
     </div>
   )

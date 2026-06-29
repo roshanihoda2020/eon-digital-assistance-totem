@@ -116,16 +116,16 @@ export function LuxiaControlBar({
                   disabled={isProcessing}
                   tone="softRed"
                   ariaLabel="Parla"
-                  icon={<Mic size={16} strokeWidth={2} />}
+                  icon={isListening ? <Send size={16} strokeWidth={2} /> : <Mic size={16} strokeWidth={2} />}
                 />
                 <IconBtn
-                  onClick={isListening ? onInvia : onScrivi}
-                  active={isListening || isTyping}
-                  activeColor={isListening ? '#EA1D0A' : '#B00502'}
+                  onClick={onScrivi}
+                  active={isTyping}
+                  activeColor="#B00502"
                   disabled={isProcessing}
                   tone="softRed"
                   ariaLabel="Scrivi"
-                  icon={isListening ? <Send size={16} strokeWidth={2} /> : <Keyboard size={16} strokeWidth={2} />}
+                  icon={<Keyboard size={16} strokeWidth={2} />}
                 />
               </div>
 
@@ -205,150 +205,150 @@ export function LuxiaControlBar({
               transition: 'padding 0.22s ease',
             }}
           >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          minHeight: '100%',
-          gap: 0,
-          background: 'transparent',
-          border: 'none',
-          borderRadius: 0,
-          boxShadow: 'none',
-          padding: 0,
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
-          <ActionGroup flex={1.3} tone="softRed" gap={buttonGap}>
-            <Btn
-              onClick={onParla}
-              active={isListening}
-              activeColor="#EA1D0A"
-              disabled={isProcessing}
-              pulsing={isListening}
-              tone="softRed"
-              flex={1}
-              height={btnH}
-              iconSize={iconSz}
-              compact={compact}
-              label="Parla"
-              desc="Premi per parlare con Luxia"
-              icon={<Mic size={iconSz} strokeWidth={2} />}
-            />
-            <Btn
-              onClick={isListening ? onInvia : onScrivi}
-              active={isListening || isTyping}
-              activeColor={isListening ? '#EA1D0A' : '#B00502'}
-              disabled={isProcessing}
-              tone="softRed"
-              flex={1}
-              height={btnH}
-              iconSize={iconSz}
-              compact={compact}
-              label="Scrivi"
-              desc="Digita la tua domanda"
-              icon={isListening ? <Send size={iconSz} strokeWidth={2} /> : <Keyboard size={iconSz} strokeWidth={2} />}
-            />
-          </ActionGroup>
-
-          <ActionGroup flex={1.05} tone="neutral" gap={buttonGap}>
-            <Btn
-              onClick={onSetAvatar}
-              active={inAvatarMode}
-              activeColor="#EA1D0A"
-              tone="neutral"
-              flex={1}
-              height={btnH}
-              iconSize={iconSz}
-              compact={compact}
-              label="Avatar"
-              desc="Mostra assistente virtuale"
-              icon={<User size={iconSz} strokeWidth={2} />}
-            />
-            <Btn
-              onClick={onSetChat}
-              active={!inAvatarMode}
-              activeColor="#EA1D0A"
-              tone="neutral"
-              flex={1}
-              height={btnH}
-              iconSize={iconSz}
-              compact={compact}
-              label="Chat"
-              desc="Solo conversazione testuale"
-              icon={<MessageSquare size={iconSz} strokeWidth={2} />}
-            />
-          </ActionGroup>
-        </div>
-
-        <div style={{ flex: 1, minHeight: compact ? 8 : 16 }} />
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
-          <ActionGroup flex={1.18} tone="neutral" gap={buttonGap}>
-            <Btn
-              onClick={onReset}
-              disabled={isProcessing}
-              tone="neutral"
-              flex={1}
-              height={btnH}
-              iconSize={iconSz}
-              compact={compact}
-              label="Reset"
-              desc="Nuova conversazione"
-              icon={<RefreshCw size={iconSz - 1} strokeWidth={2} />}
-            />
-            <Btn
-              onClick={onTermina}
-              danger
-              disabled={isProcessing}
-              flex={1}
-              height={btnH}
-              iconSize={iconSz}
-              compact={compact}
-              label="Termina"
-              desc="Chiudi la sessione"
-              icon={<LogOut size={iconSz - 1} strokeWidth={2} />}
-            />
-          </ActionGroup>
-
-          <div style={{ width: '100%', position: 'relative', display: 'flex', alignItems: 'flex-end' }}>
-            <button
-              onClick={() => setLangOpen(o => !o)}
-              aria-label="Lingua"
+            <div
               style={{
-                width: '100%',
-                height: compact ? 42 : 46,
-                borderRadius: 14,
-                border: '1px solid #EFE4E2',
-                background: '#FFFFFF',
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 7,
-                cursor: 'pointer',
-                fontFamily: 'Inter, sans-serif',
-                color: '#404040',
-                transition: 'border-color 0.18s ease, background 0.18s ease',
+                flexDirection: 'column',
+                alignItems: 'stretch',
+                minHeight: '100%',
+                gap: 0,
+                background: 'transparent',
+                border: 'none',
+                borderRadius: 0,
+                boxShadow: 'none',
+                padding: 0,
               }}
             >
-              <span style={{ fontSize: 16, lineHeight: 1 }}>{currentLang.flag}</span>
-              <Globe2 size={15} strokeWidth={2} color="#EA1D0A" />
-              <span style={{ fontSize: 14, fontWeight: 800, color: '#404040', letterSpacing: '0.04em', lineHeight: 1 }}>
-                {currentLang.code}
-              </span>
-              <ChevronDown
-                size={13}
-                color="#9A8B88"
-                strokeWidth={2.4}
-                style={{ transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}
-              />
-            </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
+                <ActionGroup flex={1.3} tone="softRed" gap={buttonGap}>
+                  <Btn
+                    onClick={onParla}
+                    active={isListening}
+                    activeColor="#EA1D0A"
+                    disabled={isProcessing}
+                    pulsing={isListening}
+                    tone="softRed"
+                    flex={1}
+                    height={btnH}
+                    iconSize={iconSz}
+                    compact={compact}
+                    label={isListening ? 'Invia domanda' : 'Parla'}
+                    desc={isListening ? 'Invia la tua domanda' : 'Premi per parlare con Luxia'}
+                    icon={isListening ? <Send size={iconSz} strokeWidth={2} /> : <Mic size={iconSz} strokeWidth={2} />}
+                  />
+                  <Btn
+                    onClick={onScrivi}
+                    active={isTyping}
+                    activeColor="#B00502"
+                    disabled={isProcessing}
+                    tone="softRed"
+                    flex={1}
+                    height={btnH}
+                    iconSize={iconSz}
+                    compact={compact}
+                    label="Scrivi"
+                    desc="Digita la tua domanda"
+                    icon={<Keyboard size={iconSz} strokeWidth={2} />}
+                  />
+                </ActionGroup>
 
-          </div>
-        </div>
-      </div>
+                <ActionGroup flex={1.05} tone="neutral" gap={buttonGap}>
+                  <Btn
+                    onClick={onSetAvatar}
+                    active={inAvatarMode}
+                    activeColor="#EA1D0A"
+                    tone="neutral"
+                    flex={1}
+                    height={btnH}
+                    iconSize={iconSz}
+                    compact={compact}
+                    label="Avatar"
+                    desc="Mostra assistente virtuale"
+                    icon={<User size={iconSz} strokeWidth={2} />}
+                  />
+                  <Btn
+                    onClick={onSetChat}
+                    active={!inAvatarMode}
+                    activeColor="#EA1D0A"
+                    tone="neutral"
+                    flex={1}
+                    height={btnH}
+                    iconSize={iconSz}
+                    compact={compact}
+                    label="Chat"
+                    desc="Solo conversazione testuale"
+                    icon={<MessageSquare size={iconSz} strokeWidth={2} />}
+                  />
+                </ActionGroup>
+              </div>
+
+              <div style={{ flex: 1, minHeight: compact ? 8 : 16 }} />
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
+                <ActionGroup flex={1.18} tone="neutral" gap={buttonGap}>
+                  <Btn
+                    onClick={onReset}
+                    disabled={isProcessing}
+                    tone="neutral"
+                    flex={1}
+                    height={btnH}
+                    iconSize={iconSz}
+                    compact={compact}
+                    label="Reset"
+                    desc="Nuova conversazione"
+                    icon={<RefreshCw size={iconSz - 1} strokeWidth={2} />}
+                  />
+                  <Btn
+                    onClick={onTermina}
+                    danger
+                    disabled={isProcessing}
+                    flex={1}
+                    height={btnH}
+                    iconSize={iconSz}
+                    compact={compact}
+                    label="Termina"
+                    desc="Chiudi la sessione"
+                    icon={<LogOut size={iconSz - 1} strokeWidth={2} />}
+                  />
+                </ActionGroup>
+
+                <div style={{ width: '100%', position: 'relative', display: 'flex', alignItems: 'flex-end' }}>
+                  <button
+                    onClick={() => setLangOpen(o => !o)}
+                    aria-label="Lingua"
+                    style={{
+                      width: '100%',
+                      height: compact ? 42 : 46,
+                      borderRadius: 14,
+                      border: '1px solid #EFE4E2',
+                      background: '#FFFFFF',
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 7,
+                      cursor: 'pointer',
+                      fontFamily: 'Inter, sans-serif',
+                      color: '#404040',
+                      transition: 'border-color 0.18s ease, background 0.18s ease',
+                    }}
+                  >
+                    <span style={{ fontSize: 16, lineHeight: 1 }}>{currentLang.flag}</span>
+                    <Globe2 size={15} strokeWidth={2} color="#EA1D0A" />
+                    <span style={{ fontSize: 14, fontWeight: 800, color: '#404040', letterSpacing: '0.04em', lineHeight: 1 }}>
+                      {currentLang.code}
+                    </span>
+                    <ChevronDown
+                      size={13}
+                      color="#9A8B88"
+                      strokeWidth={2.4}
+                      style={{ transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}
+                    />
+                  </button>
+
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -500,18 +500,18 @@ interface IconBtnProps {
 function IconBtn({ onClick, ariaLabel, icon, active, activeColor, disabled, danger, tone }: IconBtnProps) {
   const bg = active && activeColor ? activeColor
     : disabled ? '#F2F2F2'
-    : danger ? '#FFFFFF'
-    : tone === 'softRed' ? '#FDF3F2'
-    : '#FFFFFF'
+      : danger ? '#FFFFFF'
+        : tone === 'softRed' ? '#FDF3F2'
+          : '#FFFFFF'
   const bdr = active && activeColor ? '1px solid transparent'
     : danger ? '1.5px solid rgba(234,29,10,0.55)'
-    : tone === 'softRed' ? '1px solid rgba(234,29,10,0.12)'
-    : '1px solid #E6E6E8'
+      : tone === 'softRed' ? '1px solid rgba(234,29,10,0.12)'
+        : '1px solid #E6E6E8'
   const clr = active ? '#FFFFFF'
     : disabled ? '#BFBFBF'
-    : danger ? '#EA1D0A'
-    : tone === 'softRed' ? '#B00502'
-    : '#404040'
+      : danger ? '#EA1D0A'
+        : tone === 'softRed' ? '#B00502'
+          : '#404040'
 
   return (
     <button
@@ -542,22 +542,22 @@ function Btn({ onClick, label, desc, icon, active, activeColor, disabled, danger
   const baseSoftRed = '#FDF3F2'
   const bg = active && activeColor ? activeColor
     : disabled ? '#F2F2F2'
-    : danger ? '#FFFFFF'
-    : tone === 'softRed' ? baseSoftRed
-    : '#F7F7F8'
+      : danger ? '#FFFFFF'
+        : tone === 'softRed' ? baseSoftRed
+          : '#F7F7F8'
   const bdr = active && activeColor ? '1px solid transparent'
     : danger ? '1.5px solid rgba(234,29,10,0.55)'
-    : tone === 'softRed' ? '1px solid rgba(234,29,10,0.12)'
-    : '1px solid #E6E6E8'
+      : tone === 'softRed' ? '1px solid rgba(234,29,10,0.12)'
+        : '1px solid #E6E6E8'
   const clr = active ? '#FFFFFF'
     : disabled ? '#BFBFBF'
-    : danger ? '#EA1D0A'
-    : tone === 'softRed' ? '#B00502'
-    : '#404040'
+      : danger ? '#EA1D0A'
+        : tone === 'softRed' ? '#B00502'
+          : '#404040'
   const descClr = active ? 'rgba(255,255,255,0.72)'
     : disabled ? '#C9C9C9'
-    : danger ? 'rgba(234,29,10,0.72)'
-    : '#8E8E92'
+      : danger ? 'rgba(234,29,10,0.72)'
+        : '#8E8E92'
   const showDesc = !compact
 
   return (
