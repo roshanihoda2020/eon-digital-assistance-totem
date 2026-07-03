@@ -1,36 +1,29 @@
-import { Mic, Keyboard, Send, RefreshCw, LogOut, ChevronDown, Check, User, MessageSquare, Globe2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Mic, Keyboard, Send, RefreshCw, LogOut, ChevronDown, Check, Globe2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useState } from 'react'
 import { SessionState, LangCode, LANGUAGES, DisplayMode } from '../types'
 
 interface Props {
   sessionState: SessionState
-  displayMode: DisplayMode
   lang: LangCode
   keyboardOpen: boolean
-  collapsed: boolean
-  onCollapsedChange: (collapsed: boolean) => void
   onParla: () => void
   onScrivi: () => void
   onInvia: () => void
   onReset: () => void
   onTermina: () => void
   onLangChange: (lang: LangCode) => void
-  onSetAvatar: () => void
-  onSetChat: () => void
 }
 
 export function LuxiaControlBar({
-  sessionState, displayMode, lang, keyboardOpen,
-  collapsed, onCollapsedChange,
-  onParla, onScrivi, onInvia, onReset, onTermina, onLangChange, onSetAvatar, onSetChat,
+  sessionState, lang, keyboardOpen,
+  onParla, onScrivi, onInvia, onReset, onTermina, onLangChange,
 }: Props) {
   const [langOpen, setLangOpen] = useState(false)
   const isListening = sessionState === 'listening'
   const isTyping = sessionState === 'typing'
   const isProcessing = sessionState === 'processing'
   const currentLang = LANGUAGES.find(l => l.code === lang) ?? LANGUAGES[0]
-  const inAvatarMode = displayMode === 'avatar'
   const compact = keyboardOpen
 
   const btnH = compact ? 54 : 74
@@ -38,8 +31,7 @@ export function LuxiaControlBar({
   const barPad = compact ? 8 : 10
 
   const railWidth = compact ? 104 : 110
-  const collapsedWidth = 30
-  const columnWidth = collapsed ? 54 : railWidth + 38
+  const columnWidth = railWidth + 38
   const buttonGap = compact ? 5 : 6
   const sectionGap = compact ? 10 : 14
 
@@ -58,304 +50,152 @@ export function LuxiaControlBar({
       animate={{ width: columnWidth }}
       transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
     >
-      <button
-        onClick={() => onCollapsedChange(!collapsed)}
-        aria-label={collapsed ? 'Espandi azioni' : 'Comprimi azioni'}
+      <motion.div
+        key="rail"
+        initial={{ opacity: 0, x: 18 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.18 }}
         style={{
           position: 'absolute',
-          top: collapsed ? 18 : '50%',
-          left: collapsed ? 'auto' : 0,
-          right: collapsed ? 16 : 'auto',
-          width: collapsed ? 30 : 20,
-          height: collapsed ? 34 : 96,
-          transform: collapsed ? 'none' : 'translateY(-50%)',
-          border: '1px solid rgba(234,29,10,0.14)',
-          borderRight: collapsed ? '1px solid rgba(234,29,10,0.14)' : 'none',
-          borderRadius: collapsed ? '14px 0 0 14px' : '12px 0 0 12px',
+          top: 12,
+          right: 16,
+          bottom: 12,
+          width: railWidth,
           background: '#FFFFFF',
-          boxShadow: '0 6px 18px rgba(95,31,25,0.10)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#EA1D0A',
-          cursor: 'pointer',
+          border: '1px solid rgba(234,29,10,0.10)',
+          borderRadius: 20,
+          boxShadow: '0 8px 26px rgba(95,31,25,0.11)',
+          fontFamily: 'Inter, sans-serif',
+          paddingInline: 8,
+          paddingTop: barPad,
+          paddingBottom: barPad,
+          overflowY: 'auto',
+          overflowX: 'visible',
+          scrollbarWidth: 'none',
           pointerEvents: 'auto',
-          zIndex: 2,
+          transition: 'padding 0.22s ease',
         }}
       >
-        {collapsed ? <ChevronLeft size={18} strokeWidth={2.4} /> : <ChevronRight size={18} strokeWidth={2.4} />}
-      </button>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            minHeight: '100%',
+            gap: 0,
+            background: 'transparent',
+            border: 'none',
+            borderRadius: 0,
+            boxShadow: 'none',
+            padding: 0,
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
+            <ActionGroup flex={1.3} tone="softRed" gap={buttonGap}>
+              <Btn
+                onClick={onParla}
+                active={isListening}
+                activeColor="#EA1D0A"
+                disabled={isProcessing}
+                pulsing={isListening}
+                tone="softRed"
+                flex={1}
+                height={btnH}
+                iconSize={iconSz}
+                compact={compact}
+                label={isListening ? 'Invia domanda' : 'Parla'}
+                desc={isListening ? 'Invia la tua domanda' : 'Premi per parlare con Luxia'}
+                icon={isListening ? <Send size={iconSz} strokeWidth={2} /> : <Mic size={iconSz} strokeWidth={2} />}
+              />
+              <Btn
+                onClick={onScrivi}
+                active={isTyping}
+                activeColor="#B00502"
+                disabled={isProcessing}
+                tone="softRed"
+                flex={1}
+                height={btnH}
+                iconSize={iconSz}
+                compact={compact}
+                label="Scrivi"
+                desc="Digita la tua domanda"
+                icon={<Keyboard size={iconSz} strokeWidth={2} />}
+              />
+            </ActionGroup>
 
-      <AnimatePresence>
-        {collapsed && (
-          <motion.div
-            key="rail-collapsed"
-            initial={{ opacity: 0, x: 8 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 8 }}
-            transition={{ duration: 0.16 }}
-            style={{
-              position: 'absolute',
-              top: 58,
-              right: 16,
-              bottom: 12,
-              width: collapsedWidth,
-              display: 'flex',
-              flexDirection: 'column',
-              paddingTop: 4,
-              paddingBottom: 4,
-              pointerEvents: 'auto',
-            }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: buttonGap }}>
-                <IconBtn
-                  onClick={onParla}
-                  active={isListening}
-                  activeColor="#EA1D0A"
-                  disabled={isProcessing}
-                  tone="softRed"
-                  ariaLabel="Parla"
-                  icon={isListening ? <Send size={16} strokeWidth={2} /> : <Mic size={16} strokeWidth={2} />}
-                />
-                <IconBtn
-                  onClick={onScrivi}
-                  active={isTyping}
-                  activeColor="#B00502"
-                  disabled={isProcessing}
-                  tone="softRed"
-                  ariaLabel="Scrivi"
-                  icon={<Keyboard size={16} strokeWidth={2} />}
-                />
-              </div>
+          </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: buttonGap }}>
-                <IconBtn
-                  onClick={onSetAvatar}
-                  active={inAvatarMode}
-                  activeColor="#EA1D0A"
-                  ariaLabel="Avatar"
-                  icon={<User size={16} strokeWidth={2} />}
+          <div style={{ flex: 1, minHeight: compact ? 8 : 16 }} />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
+            <ActionGroup flex={1.18} tone="neutral" gap={buttonGap}>
+              <Btn
+                onClick={onReset}
+                disabled={isProcessing}
+                tone="neutral"
+                flex={1}
+                height={btnH}
+                iconSize={iconSz}
+                compact={compact}
+                label="Reset"
+                desc="Nuova conversazione"
+                icon={<RefreshCw size={iconSz - 1} strokeWidth={2} />}
+              />
+              <Btn
+                onClick={onTermina}
+                danger
+                disabled={isProcessing}
+                flex={1}
+                height={btnH}
+                iconSize={iconSz}
+                compact={compact}
+                label="Termina sessione"
+                desc="Chiudi la sessione"
+                icon={<LogOut size={iconSz - 1} strokeWidth={2} />}
+              />
+            </ActionGroup>
+
+            <div style={{ width: '100%', position: 'relative', display: 'flex', alignItems: 'flex-end' }}>
+              <button
+                onClick={() => setLangOpen(o => !o)}
+                aria-label="Lingua"
+                style={{
+                  width: '100%',
+                  height: compact ? 42 : 46,
+                  borderRadius: 14,
+                  border: '1px solid #EFE4E2',
+                  background: '#FFFFFF',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 7,
+                  cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif',
+                  color: '#404040',
+                  transition: 'border-color 0.18s ease, background 0.18s ease',
+                }}
+              >
+                <span style={{ fontSize: 16, lineHeight: 1 }}>{currentLang.flag}</span>
+                <Globe2 size={15} strokeWidth={2} color="#EA1D0A" />
+                <span style={{ fontSize: 14, fontWeight: 800, color: '#404040', letterSpacing: '0.04em', lineHeight: 1 }}>
+                  {currentLang.code}
+                </span>
+                <ChevronDown
+                  size={13}
+                  color="#9A8B88"
+                  strokeWidth={2.4}
+                  style={{ transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}
                 />
-                <IconBtn
-                  onClick={onSetChat}
-                  active={!inAvatarMode}
-                  activeColor="#EA1D0A"
-                  ariaLabel="Chat"
-                  icon={<MessageSquare size={16} strokeWidth={2} />}
-                />
-              </div>
+              </button>
+
             </div>
-
-            <div style={{ flex: 1, minHeight: compact ? 8 : 16 }} />
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: buttonGap }}>
-                <IconBtn
-                  onClick={onReset}
-                  disabled={isProcessing}
-                  ariaLabel="Reset"
-                  icon={<RefreshCw size={15} strokeWidth={2} />}
-                />
-                <IconBtn
-                  onClick={onTermina}
-                  danger
-                  disabled={isProcessing}
-                  ariaLabel="Termina"
-                  icon={<LogOut size={15} strokeWidth={2} />}
-                />
-              </div>
-
-              <div style={{ position: 'relative' }}>
-                <IconBtn
-                  onClick={() => setLangOpen(o => !o)}
-                  ariaLabel="Lingua"
-                  icon={<Globe2 size={15} strokeWidth={2} />}
-                />
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {!collapsed && (
-          <motion.div
-            key="rail"
-            initial={{ opacity: 0, x: 18 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 18 }}
-            transition={{ duration: 0.18 }}
-            style={{
-              position: 'absolute',
-              top: 12,
-              right: 16,
-              bottom: 12,
-              width: railWidth,
-              background: '#FFFFFF',
-              border: '1px solid rgba(234,29,10,0.10)',
-              borderRadius: 20,
-              boxShadow: '0 8px 26px rgba(95,31,25,0.11)',
-              fontFamily: 'Inter, sans-serif',
-              paddingInline: 8,
-              paddingTop: barPad,
-              paddingBottom: barPad,
-              overflowY: 'auto',
-              overflowX: 'visible',
-              scrollbarWidth: 'none',
-              pointerEvents: 'auto',
-              transition: 'padding 0.22s ease',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch',
-                minHeight: '100%',
-                gap: 0,
-                background: 'transparent',
-                border: 'none',
-                borderRadius: 0,
-                boxShadow: 'none',
-                padding: 0,
-              }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
-                <ActionGroup flex={1.3} tone="softRed" gap={buttonGap}>
-                  <Btn
-                    onClick={onParla}
-                    active={isListening}
-                    activeColor="#EA1D0A"
-                    disabled={isProcessing}
-                    pulsing={isListening}
-                    tone="softRed"
-                    flex={1}
-                    height={btnH}
-                    iconSize={iconSz}
-                    compact={compact}
-                    label={isListening ? 'Invia domanda' : 'Parla'}
-                    desc={isListening ? 'Invia la tua domanda' : 'Premi per parlare con Luxia'}
-                    icon={isListening ? <Send size={iconSz} strokeWidth={2} /> : <Mic size={iconSz} strokeWidth={2} />}
-                  />
-                  <Btn
-                    onClick={onScrivi}
-                    active={isTyping}
-                    activeColor="#B00502"
-                    disabled={isProcessing}
-                    tone="softRed"
-                    flex={1}
-                    height={btnH}
-                    iconSize={iconSz}
-                    compact={compact}
-                    label="Scrivi"
-                    desc="Digita la tua domanda"
-                    icon={<Keyboard size={iconSz} strokeWidth={2} />}
-                  />
-                </ActionGroup>
-
-                <ActionGroup flex={1.05} tone="neutral" gap={buttonGap}>
-                  <Btn
-                    onClick={onSetAvatar}
-                    active={inAvatarMode}
-                    activeColor="#EA1D0A"
-                    tone="neutral"
-                    flex={1}
-                    height={btnH}
-                    iconSize={iconSz}
-                    compact={compact}
-                    label="Avatar"
-                    desc="Mostra assistente virtuale"
-                    icon={<User size={iconSz} strokeWidth={2} />}
-                  />
-                  <Btn
-                    onClick={onSetChat}
-                    active={!inAvatarMode}
-                    activeColor="#EA1D0A"
-                    tone="neutral"
-                    flex={1}
-                    height={btnH}
-                    iconSize={iconSz}
-                    compact={compact}
-                    label="Chat"
-                    desc="Solo conversazione testuale"
-                    icon={<MessageSquare size={iconSz} strokeWidth={2} />}
-                  />
-                </ActionGroup>
-              </div>
-
-              <div style={{ flex: 1, minHeight: compact ? 8 : 16 }} />
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
-                <ActionGroup flex={1.18} tone="neutral" gap={buttonGap}>
-                  <Btn
-                    onClick={onReset}
-                    disabled={isProcessing}
-                    tone="neutral"
-                    flex={1}
-                    height={btnH}
-                    iconSize={iconSz}
-                    compact={compact}
-                    label="Reset"
-                    desc="Nuova conversazione"
-                    icon={<RefreshCw size={iconSz - 1} strokeWidth={2} />}
-                  />
-                  <Btn
-                    onClick={onTermina}
-                    danger
-                    disabled={isProcessing}
-                    flex={1}
-                    height={btnH}
-                    iconSize={iconSz}
-                    compact={compact}
-                    label="Termina"
-                    desc="Chiudi la sessione"
-                    icon={<LogOut size={iconSz - 1} strokeWidth={2} />}
-                  />
-                </ActionGroup>
-
-                <div style={{ width: '100%', position: 'relative', display: 'flex', alignItems: 'flex-end' }}>
-                  <button
-                    onClick={() => setLangOpen(o => !o)}
-                    aria-label="Lingua"
-                    style={{
-                      width: '100%',
-                      height: compact ? 42 : 46,
-                      borderRadius: 14,
-                      border: '1px solid #EFE4E2',
-                      background: '#FFFFFF',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 7,
-                      cursor: 'pointer',
-                      fontFamily: 'Inter, sans-serif',
-                      color: '#404040',
-                      transition: 'border-color 0.18s ease, background 0.18s ease',
-                    }}
-                  >
-                    <span style={{ fontSize: 16, lineHeight: 1 }}>{currentLang.flag}</span>
-                    <Globe2 size={15} strokeWidth={2} color="#EA1D0A" />
-                    <span style={{ fontSize: 14, fontWeight: 800, color: '#404040', letterSpacing: '0.04em', lineHeight: 1 }}>
-                      {currentLang.code}
-                    </span>
-                    <ChevronDown
-                      size={13}
-                      color="#9A8B88"
-                      strokeWidth={2.4}
-                      style={{ transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}
-                    />
-                  </button>
-
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </motion.div>
 
       <LanguageMenu
         open={langOpen}
-        collapsed={collapsed}
         railWidth={railWidth}
         lang={lang}
         onSelect={(nextLang) => { onLangChange(nextLang); setLangOpen(false) }}
@@ -366,18 +206,16 @@ export function LuxiaControlBar({
 
 function LanguageMenu({
   open,
-  collapsed,
   railWidth,
   lang,
   onSelect,
 }: {
   open: boolean
-  collapsed: boolean
   railWidth: number
   lang: LangCode
   onSelect: (lang: LangCode) => void
 }) {
-  const menuRight = collapsed ? 56 : railWidth + 26
+  const menuRight = railWidth + 26
 
   return (
     <AnimatePresence>

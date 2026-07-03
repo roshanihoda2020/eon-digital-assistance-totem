@@ -22,7 +22,7 @@ const CONFIG = {
     iconColor: '#EA1D0A',
     iconBg: '#FDF3F2',
     title: 'Terminare la sessione?',
-    description: 'La conversazione verrà chiusa e il totem tornerà alla schermata iniziale.',
+    description: 'La conversazione verrà chiusa ed eliminata. Il totem tornerà alla schermata iniziale.',
     confirmLabel: 'Sì, termina',
     confirmBg: '#B00502',
   },

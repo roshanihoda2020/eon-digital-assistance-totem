@@ -47,7 +47,6 @@ export default function App() {
   const [keyboardOpen, setKeyboardOpen] = useState(false)
   const [hasAnswer, setHasAnswer] = useState(false)
   const [confirmation, setConfirmation] = useState<'reset' | 'end' | null>(null)
-  const [railCollapsed, setRailCollapsed] = useState(false)
 
   // Hero panel height — drives smooth layout animation
   const heroHeight = displayMode === 'avatar'
@@ -315,19 +314,14 @@ export default function App() {
 
             <LuxiaControlBar
               sessionState={sessionState}
-              displayMode={displayMode}
               lang={lang}
               keyboardOpen={keyboardOpen}
-              collapsed={railCollapsed}
-              onCollapsedChange={setRailCollapsed}
               onParla={handleParla}
               onScrivi={handleScrivi}
               onInvia={handleSend}
               onReset={() => setConfirmation('reset')}
               onTermina={() => setConfirmation('end')}
               onLangChange={setLang}
-              onSetAvatar={() => setDisplayMode('avatar')}
-              onSetChat={() => setDisplayMode('fullchat')}
             />
           </div>
 

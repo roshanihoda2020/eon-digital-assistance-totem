@@ -3,7 +3,7 @@ import { Zap, Flame, Car, Home } from 'lucide-react'
 const SERVICES = [
   { icon: Zap, label: 'Luce', color: '#EA1D0A' },
   { icon: Flame, label: 'Gas', color: '#EA1D0A' },
-  { icon: Car, label: 'E-Mobility', color: '#1EA2B1' },
+  { icon: Car, label: 'E-Mobility', color: '#EA1D0A' },
   { icon: Home, label: 'Servizi Casa', color: '#EA1D0A' },
 ]
 
