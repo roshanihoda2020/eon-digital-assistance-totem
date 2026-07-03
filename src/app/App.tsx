@@ -51,7 +51,7 @@ export default function App() {
   // Hero panel height — drives smooth layout animation
   const heroHeight = displayMode === 'avatar'
     ? (keyboardOpen ? AVATAR_HEIGHT_COMPRESSED : AVATAR_HEIGHT_NORMAL)
-    : 280
+    : 232
 
   const heroKey = displayMode === 'avatar' ? 'avatar'
     : 'welcome'
@@ -187,6 +187,13 @@ export default function App() {
     if (sessionState === 'typing') setSessionState('waiting')
   }, [sessionState])
 
+  const handleRipeti = useCallback(() => {
+    if (!hasAnswer || sessionState === 'processing') return
+    setSessionState('speaking')
+    resetInactivity()
+    setTimeout(() => { setSessionState('waiting'); resetInactivity() }, 2000)
+  }, [hasAnswer, resetInactivity, sessionState])
+
   const executeReset = useCallback(() => {
     setMessages([makeWelcome()])
     setInputValue('')
@@ -288,11 +295,7 @@ export default function App() {
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               <ChatArea
                 messages={messages}
-                onRipeti={hasAnswer ? () => {
-                  setSessionState('speaking')
-                  resetInactivity()
-                  setTimeout(() => { setSessionState('waiting'); resetInactivity() }, 2000)
-                } : undefined}
+                onRipeti={hasAnswer ? handleRipeti : undefined}
               />
 
               {/* Typing indicator */}
@@ -304,7 +307,7 @@ export default function App() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    style={{ paddingLeft: 48, paddingBottom: 12, flexShrink: 0 }}
+                    style={{ paddingLeft: 42, paddingBottom: 12, flexShrink: 0 }}
                   >
                     <TypingIndicator />
                   </motion.div>
@@ -318,7 +321,6 @@ export default function App() {
               keyboardOpen={keyboardOpen}
               onParla={handleParla}
               onScrivi={handleScrivi}
-              onInvia={handleSend}
               onReset={() => setConfirmation('reset')}
               onTermina={() => setConfirmation('end')}
               onLangChange={setLang}

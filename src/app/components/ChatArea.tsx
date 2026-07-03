@@ -32,7 +32,7 @@ export function ChatArea({ messages, onRipeti }: Props) {
         minHeight: 0,
         overflowY: 'auto',
         overflowX: 'hidden',
-        padding: '28px 48px',
+        padding: '28px 30px 28px 42px',
         display: 'flex',
         flexDirection: 'column',
         gap: 20,

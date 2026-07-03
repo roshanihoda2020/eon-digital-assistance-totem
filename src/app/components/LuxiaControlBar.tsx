@@ -1,7 +1,7 @@
 import { Mic, Keyboard, Send, RefreshCw, LogOut, ChevronDown, Check, Globe2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useState } from 'react'
-import { SessionState, LangCode, LANGUAGES, DisplayMode } from '../types'
+import { SessionState, LangCode, LANGUAGES } from '../types'
 
 interface Props {
   sessionState: SessionState
@@ -9,7 +9,6 @@ interface Props {
   keyboardOpen: boolean
   onParla: () => void
   onScrivi: () => void
-  onInvia: () => void
   onReset: () => void
   onTermina: () => void
   onLangChange: (lang: LangCode) => void
@@ -17,7 +16,7 @@ interface Props {
 
 export function LuxiaControlBar({
   sessionState, lang, keyboardOpen,
-  onParla, onScrivi, onInvia, onReset, onTermina, onLangChange,
+  onParla, onScrivi, onReset, onTermina, onLangChange,
 }: Props) {
   const [langOpen, setLangOpen] = useState(false)
   const isListening = sessionState === 'listening'
@@ -26,14 +25,14 @@ export function LuxiaControlBar({
   const currentLang = LANGUAGES.find(l => l.code === lang) ?? LANGUAGES[0]
   const compact = keyboardOpen
 
-  const btnH = compact ? 54 : 74
-  const iconSz = compact ? 18 : 20
-  const barPad = compact ? 8 : 10
+  const btnH = compact ? 60 : 82
+  const iconSz = compact ? 20 : 22
+  const barPad = compact ? 10 : 12
 
-  const railWidth = compact ? 104 : 110
-  const columnWidth = railWidth + 38
-  const buttonGap = compact ? 5 : 6
-  const sectionGap = compact ? 10 : 14
+  const railWidth = compact ? 110 : 116
+  const columnWidth = railWidth + 40
+  const buttonGap = compact ? 7 : 8
+  const sectionGap = compact ? 12 : 16
 
   return (
     <motion.aside
@@ -104,7 +103,7 @@ export function LuxiaControlBar({
                 iconSize={iconSz}
                 compact={compact}
                 label={isListening ? 'Invia domanda' : 'Parla'}
-                desc={isListening ? 'Invia la tua domanda' : 'Premi per parlare con Luxia'}
+                desc={isListening ? 'Invia la domanda' : 'Parla con Luxia'}
                 icon={isListening ? <Send size={iconSz} strokeWidth={2} /> : <Mic size={iconSz} strokeWidth={2} />}
               />
               <Btn
@@ -118,7 +117,7 @@ export function LuxiaControlBar({
                 iconSize={iconSz}
                 compact={compact}
                 label="Scrivi"
-                desc="Digita la tua domanda"
+                desc="Digita la domanda"
                 icon={<Keyboard size={iconSz} strokeWidth={2} />}
               />
             </ActionGroup>
@@ -150,7 +149,7 @@ export function LuxiaControlBar({
                 iconSize={iconSz}
                 compact={compact}
                 label="Termina sessione"
-                desc="Chiudi la sessione"
+                desc="Chiudi sessione"
                 icon={<LogOut size={iconSz - 1} strokeWidth={2} />}
               />
             </ActionGroup>
@@ -161,7 +160,7 @@ export function LuxiaControlBar({
                 aria-label="Lingua"
                 style={{
                   width: '100%',
-                  height: compact ? 42 : 46,
+                  height: compact ? 44 : 50,
                   borderRadius: 14,
                   border: '1px solid #EFE4E2',
                   background: '#FFFFFF',
@@ -169,20 +168,19 @@ export function LuxiaControlBar({
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: 7,
+                  gap: 8,
                   cursor: 'pointer',
                   fontFamily: 'Inter, sans-serif',
                   color: '#404040',
                   transition: 'border-color 0.18s ease, background 0.18s ease',
                 }}
               >
-                <span style={{ fontSize: 16, lineHeight: 1 }}>{currentLang.flag}</span>
-                <Globe2 size={15} strokeWidth={2} color="#EA1D0A" />
-                <span style={{ fontSize: 14, fontWeight: 800, color: '#404040', letterSpacing: '0.04em', lineHeight: 1 }}>
+                <Globe2 size={16} strokeWidth={2} color="#EA1D0A" />
+                <span style={{ fontSize: 15, fontWeight: 800, color: '#404040', letterSpacing: '0.04em', lineHeight: 1 }}>
                   {currentLang.code}
                 </span>
                 <ChevronDown
-                  size={13}
+                  size={14}
                   color="#9A8B88"
                   strokeWidth={2.4}
                   style={{ transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}
@@ -297,7 +295,7 @@ function ActionGroup({ flex, tone, gap, children }: ActionGroupProps) {
         flexDirection: 'column',
         gap,
         alignItems: 'stretch',
-        padding: 5,
+        padding: 6,
         borderRadius: 16,
         background,
       }}
@@ -431,13 +429,13 @@ function Btn({ onClick, label, desc, icon, active, activeColor, disabled, danger
         }}
       >
         {icon}
-        <span style={{ fontSize: compact ? 11 : 12, fontWeight: 800, letterSpacing: 0, lineHeight: 1 }}>
+        <span style={{ fontSize: compact ? 12 : 13, fontWeight: 800, letterSpacing: 0, lineHeight: 1 }}>
           {label}
         </span>
         {showDesc && (
           <span
             style={{
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: 500,
               color: descClr,
               lineHeight: 1.08,

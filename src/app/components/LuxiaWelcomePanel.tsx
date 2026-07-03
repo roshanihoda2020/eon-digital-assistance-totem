@@ -6,9 +6,9 @@ export function LuxiaWelcomePanel() {
       style={{
         height: '100%',
         display: 'flex',
-        alignItems: 'center',
-        paddingInline: 44,
-        paddingBlock: 24,
+        alignItems: 'stretch',
+        paddingInline: 20,
+        paddingBlock: 10,
         background: '#FDF3F2',
         overflow: 'hidden',
       }}
@@ -16,24 +16,21 @@ export function LuxiaWelcomePanel() {
       <div
         style={{
           width: '100%',
-          maxWidth: 720,
-          minHeight: 180,
+          height: '100%',
           display: 'flex',
           alignItems: 'center',
-          padding: '22px 28px',
-          background: '#FFF7F6',
-          border: '1.5px solid rgba(240,85,72,0.16)',
-          borderRadius: 16,
-          boxShadow: '0 10px 30px rgba(95,31,25,0.07)',
-          marginLeft: 0,
-          marginRight: 'auto',
+          padding: '16px 24px',
+          background: '#FFFCFB',
+          border: 'none',
+          borderRadius: 12,
+          boxShadow: '0 1px 0 rgba(95,31,25,0.08), 0 6px 16px rgba(95,31,25,0.06)',
         }}
       >
         {/* E.ON red accent line */}
         <div
           style={{
             width: 4,
-            height: 160,
+            height: 108,
             background: '#EA1D0A',
             borderRadius: 2,
             flexShrink: 0,
@@ -44,21 +41,21 @@ export function LuxiaWelcomePanel() {
         {/* Text content */}
         <div
           style={{
-            marginLeft: 36,
+            marginLeft: 20,
             display: 'flex',
             flexDirection: 'column',
           }}
         >
           <span
             style={{
-              fontSize: 52,
+              fontSize: 40,
               fontWeight: 700,
               color: '#1A1A1A',
               lineHeight: 1.06,
               letterSpacing: '-0.02em',
               fontFamily: 'Inter, sans-serif',
               display: 'block',
-              marginBottom: 10,
+              marginBottom: 6,
             }}
           >
             Ciao, sono Luxia
@@ -72,7 +69,7 @@ export function LuxiaWelcomePanel() {
               lineHeight: 1.3,
               fontFamily: 'Inter, sans-serif',
               display: 'block',
-              marginBottom: 14,
+              marginBottom: 10,
               letterSpacing: '0.01em',
             }}
           >
@@ -87,8 +84,8 @@ export function LuxiaWelcomePanel() {
               lineHeight: 1.4,
               fontFamily: 'Inter, sans-serif',
               display: 'block',
-              marginBottom: 18,
-              maxWidth: 600,
+              marginBottom: 12,
+              maxWidth: 680,
             }}
           >
             Ti aiuto con informazioni, servizi e supporto clienti.
