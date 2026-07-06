@@ -1,4 +1,4 @@
-import { Mic, Keyboard, Send, RefreshCw, LogOut, ChevronDown, Check, Globe2 } from 'lucide-react'
+import { Mic, Keyboard, Send, Plus, LogOut, ChevronDown, Check, Globe2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useState } from 'react'
 import { SessionState, LangCode, LANGUAGES } from '../types'
@@ -29,7 +29,7 @@ export function LuxiaControlBar({
   const iconSz = compact ? 20 : 22
   const barPad = compact ? 10 : 12
 
-  const railWidth = compact ? 110 : 116
+  const railWidth = compact ? 124 : 132
   const columnWidth = railWidth + 40
   const buttonGap = compact ? 7 : 8
   const sectionGap = compact ? 12 : 16
@@ -58,8 +58,8 @@ export function LuxiaControlBar({
           position: 'absolute',
           top: 12,
           right: 16,
-          bottom: 12,
           width: railWidth,
+          maxHeight: 'calc(100% - 24px)',
           background: '#FFFFFF',
           border: '1px solid rgba(234,29,10,0.10)',
           borderRadius: 20,
@@ -68,9 +68,7 @@ export function LuxiaControlBar({
           paddingInline: 8,
           paddingTop: barPad,
           paddingBottom: barPad,
-          overflowY: 'auto',
-          overflowX: 'visible',
-          scrollbarWidth: 'none',
+          overflow: 'visible',
           pointerEvents: 'auto',
           transition: 'padding 0.22s ease',
         }}
@@ -80,7 +78,6 @@ export function LuxiaControlBar({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
-            minHeight: '100%',
             gap: 0,
             background: 'transparent',
             border: 'none',
@@ -122,11 +119,6 @@ export function LuxiaControlBar({
               />
             </ActionGroup>
 
-          </div>
-
-          <div style={{ flex: 1, minHeight: compact ? 8 : 16 }} />
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, flexShrink: 0 }}>
             <ActionGroup flex={1.18} tone="neutral" gap={buttonGap}>
               <Btn
                 onClick={onReset}
@@ -136,9 +128,13 @@ export function LuxiaControlBar({
                 height={btnH}
                 iconSize={iconSz}
                 compact={compact}
-                label="Reset"
-                desc="Nuova conversazione"
-                icon={<RefreshCw size={iconSz - 1} strokeWidth={2} />}
+                label="Nuova chat"
+                desc="Nuova sessione"
+                icon={<Plus size={iconSz - 1} strokeWidth={2.2} />}
+                contentGap={compact ? 2 : 3}
+                labelFontSize={compact ? 10.8 : 11.8}
+                labelLineHeight={1.04}
+                descFontSize={10}
               />
               <Btn
                 onClick={onTermina}
@@ -151,6 +147,10 @@ export function LuxiaControlBar({
                 label="Termina sessione"
                 desc="Chiudi sessione"
                 icon={<LogOut size={iconSz - 1} strokeWidth={2} />}
+                contentGap={compact ? 2 : 3}
+                labelFontSize={compact ? 9.6 : 10.4}
+                labelLineHeight={1.02}
+                descFontSize={10}
               />
             </ActionGroup>
 
@@ -187,34 +187,29 @@ export function LuxiaControlBar({
                 />
               </button>
 
+              <LanguageMenu
+                open={langOpen}
+                lang={lang}
+                onSelect={(nextLang) => { onLangChange(nextLang); setLangOpen(false) }}
+              />
+
             </div>
           </div>
         </div>
       </motion.div>
-
-      <LanguageMenu
-        open={langOpen}
-        railWidth={railWidth}
-        lang={lang}
-        onSelect={(nextLang) => { onLangChange(nextLang); setLangOpen(false) }}
-      />
     </motion.aside>
   )
 }
 
 function LanguageMenu({
   open,
-  railWidth,
   lang,
   onSelect,
 }: {
   open: boolean
-  railWidth: number
   lang: LangCode
   onSelect: (lang: LangCode) => void
 }) {
-  const menuRight = railWidth + 26
-
   return (
     <AnimatePresence>
       {open && (
@@ -226,15 +221,15 @@ function LanguageMenu({
           transition={{ duration: 0.15 }}
           style={{
             position: 'absolute',
-            right: menuRight,
-            bottom: 12,
+            right: 'calc(100% + 8px)',
+            bottom: 0,
             minWidth: 210,
             background: '#FFFFFF',
             border: '1px solid rgba(234,29,10,0.10)',
             borderRadius: 14,
             overflow: 'hidden',
             boxShadow: '0 -4px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.04)',
-            zIndex: 1000,
+            zIndex: 4000,
             fontFamily: 'Inter, sans-serif',
             pointerEvents: 'auto',
           }}
@@ -320,61 +315,31 @@ interface BtnProps {
   height: number
   iconSize: number
   compact: boolean
+  contentGap?: number
+  labelFontSize?: number
+  labelLineHeight?: number
+  descFontSize?: number
 }
 
-interface IconBtnProps {
-  onClick: () => void
-  ariaLabel: string
-  icon: React.ReactNode
-  active?: boolean
-  activeColor?: string
-  disabled?: boolean
-  danger?: boolean
-  tone?: 'softRed' | 'neutral'
-}
-
-function IconBtn({ onClick, ariaLabel, icon, active, activeColor, disabled, danger, tone }: IconBtnProps) {
-  const bg = active && activeColor ? activeColor
-    : disabled ? '#F2F2F2'
-      : danger ? '#FFFFFF'
-        : tone === 'softRed' ? '#FDF3F2'
-          : '#FFFFFF'
-  const bdr = active && activeColor ? '1px solid transparent'
-    : danger ? '1.5px solid rgba(234,29,10,0.55)'
-      : tone === 'softRed' ? '1px solid rgba(234,29,10,0.12)'
-        : '1px solid #E6E6E8'
-  const clr = active ? '#FFFFFF'
-    : disabled ? '#BFBFBF'
-      : danger ? '#EA1D0A'
-        : tone === 'softRed' ? '#B00502'
-          : '#404040'
-
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={ariaLabel}
-      style={{
-        width: 30,
-        height: 34,
-        borderRadius: 11,
-        border: bdr,
-        background: bg,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: clr,
-        cursor: disabled ? 'default' : 'pointer',
-        fontFamily: 'Inter, sans-serif',
-        transition: 'background 0.20s ease, color 0.20s ease, border-color 0.20s ease',
-      }}
-    >
-      {icon}
-    </button>
-  )
-}
-
-function Btn({ onClick, label, desc, icon, active, activeColor, disabled, danger, pulsing, tone, flex, height, compact }: BtnProps) {
+function Btn({
+  onClick,
+  label,
+  desc,
+  icon,
+  active,
+  activeColor,
+  disabled,
+  danger,
+  pulsing,
+  tone,
+  flex,
+  height,
+  compact,
+  contentGap,
+  labelFontSize,
+  labelLineHeight,
+  descFontSize,
+}: BtnProps) {
   const baseSoftRed = '#FDF3F2'
   const bg = active && activeColor ? activeColor
     : disabled ? '#F2F2F2'
@@ -392,8 +357,7 @@ function Btn({ onClick, label, desc, icon, active, activeColor, disabled, danger
           : '#404040'
   const descClr = active ? 'rgba(255,255,255,0.72)'
     : disabled ? '#C9C9C9'
-      : danger ? 'rgba(234,29,10,0.72)'
-        : '#8E8E92'
+      : '#5F5F64'
   const showDesc = !compact
 
   return (
@@ -418,24 +382,36 @@ function Btn({ onClick, label, desc, icon, active, activeColor, disabled, danger
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: compact ? 2 : 4,
+          gap: contentGap ?? (compact ? 2 : 4),
+          paddingInline: compact ? 5 : 7,
           cursor: disabled ? 'default' : 'pointer',
           color: clr,
           transition: 'background 0.20s ease, color 0.20s ease, border-color 0.20s ease, height 0.22s ease',
           fontFamily: 'Inter, sans-serif',
           position: 'relative',
           flexShrink: 0,
-          overflow: 'hidden',
+          overflow: 'visible',
         }}
       >
         {icon}
-        <span style={{ fontSize: compact ? 12 : 13, fontWeight: 800, letterSpacing: 0, lineHeight: 1 }}>
+        <span
+          style={{
+            fontSize: labelFontSize ?? (compact ? 11 : 12),
+            fontWeight: 800,
+            letterSpacing: 0,
+            lineHeight: labelLineHeight ?? 1,
+            textAlign: 'center',
+            whiteSpace: 'normal',
+            maxWidth: '100%',
+            overflowWrap: 'break-word',
+          }}
+        >
           {label}
         </span>
         {showDesc && (
           <span
             style={{
-              fontSize: 10,
+              fontSize: descFontSize ?? 10,
               fontWeight: 500,
               color: descClr,
               lineHeight: 1.08,
