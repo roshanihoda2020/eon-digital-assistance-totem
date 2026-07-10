@@ -123,6 +123,7 @@ export function LuxiaControlBar({
               <Btn
                 onClick={onReset}
                 disabled={isProcessing}
+                danger
                 tone="neutral"
                 flex={1}
                 height={btnH}
