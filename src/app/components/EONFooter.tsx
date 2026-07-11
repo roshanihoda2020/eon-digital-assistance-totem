@@ -1,4 +1,5 @@
 import { Zap, Flame, Car, Home } from 'lucide-react'
+import { PoweredByLuxia } from './EONHeader'
 
 const SERVICES = [
   { icon: Zap, label: 'Luce', color: '#EA1D0A' },
@@ -27,15 +28,17 @@ export function EONFooter() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
         <span
           style={{
-            fontSize: 16,
+            fontSize: 17,
             fontWeight: 700,
             color: '#EA1D0A',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
+            letterSpacing: '0.02em',
           }}
         >
-          E.ON Digital Assistance Point
+          Sportello di Assistenza Digitale E.ON
         </span>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <PoweredByLuxia height={18} />
+        </div>
         <span
           style={{
             fontSize: 14,
@@ -50,9 +53,13 @@ export function EONFooter() {
 
       <div
         style={{
-          display: 'flex',
-          gap: 40,
-          alignItems: 'center',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+          columnGap: 16,
+          alignItems: 'start',
+          justifyItems: 'center',
+          width: '100%',
+          maxWidth: 460,
         }}
       >
         {SERVICES.map(({ icon: Icon, label, color }) => (

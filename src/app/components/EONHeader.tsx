@@ -29,8 +29,8 @@ export function EONHeader({ displayMode, onToggleMode }: Props) {
         />
       </div>
 
-      {/* Center: Powered by Luxia — inlined SVG, guaranteed rendering at kiosk scale */}
-      <PoweredByLuxia />
+      {/* Center spacer keeps the header layout balanced */}
+      <div aria-hidden="true" />
 
       {/* Right: Avatar / Chat toggle */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
@@ -64,14 +64,14 @@ export function EONHeader({ displayMode, onToggleMode }: Props) {
    Native viewBox: 0 0 137 22. Rendered at 3.5× (77px tall) for
    kiosk legibility at 1–2 m viewing distance.
 ─────────────────────────────────────────────────────────────────── */
-function PoweredByLuxia() {
+export function PoweredByLuxia({ height = 26 }: { height?: number }) {
   return (
     <svg
       viewBox="0 0 137 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ height: 26, width: 'auto', display: 'block' }}
-      aria-label="Powered by Luxia"
+      style={{ height, width: 'auto', display: 'block' }}
+      aria-label="Powered By Luxia"
       role="img"
     >
       <path
