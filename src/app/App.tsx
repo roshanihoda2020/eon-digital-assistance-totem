@@ -24,7 +24,7 @@ function currentTime() {
 }
 
 function makeWelcome(): Message {
-  return { id: Date.now(), role: 'assistant', text: 'Ciao, sono Luxia. Come posso aiutarti oggi?', time: currentTime() }
+  return { id: Date.now(), role: 'assistant', text: 'Ciao, sono Lucia. Come posso aiutarti oggi?', time: currentTime() }
 }
 
 const RESPONSES = [

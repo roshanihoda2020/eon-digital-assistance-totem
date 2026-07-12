@@ -58,7 +58,7 @@ export function LuxiaWelcomePanel() {
               marginBottom: 6,
             }}
           >
-            Ciao, sono Luxia
+            Ciao, sono Lucia
           </span>
 
           <span
@@ -145,7 +145,7 @@ export function LuxiaCompactHeader() {
             fontFamily: 'Inter, sans-serif',
           }}
         >
-          Luxia
+          Lucia
         </span>
         <span
           style={{

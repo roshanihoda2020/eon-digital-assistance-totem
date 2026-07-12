@@ -17,7 +17,7 @@ export function AvatarSection({ keyboardOpen }: Props) {
       >
         <img
           src={avatarImg}
-          alt="Luxia - assistente digitale E.ON"
+          alt="Lucia - assistente digitale E.ON"
           style={{
             width: '100%',
             height: '100%',

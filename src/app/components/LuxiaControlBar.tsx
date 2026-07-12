@@ -100,7 +100,7 @@ export function LuxiaControlBar({
                 iconSize={iconSz}
                 compact={compact}
                 label={isListening ? 'Invia domanda' : 'Parla'}
-                desc={isListening ? 'Invia la domanda' : 'Parla con Luxia'}
+                desc={isListening ? 'Invia la domanda' : 'Parla con Lucia'}
                 icon={isListening ? <Send size={iconSz} strokeWidth={2} /> : <Mic size={iconSz} strokeWidth={2} />}
               />
               <Btn
